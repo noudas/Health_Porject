@@ -1,0 +1,19 @@
+version: '0'
+
+services:
+  db:
+    image: mysql:latest
+    volumes:
+      - mysql_data:/var/lib/mysql
+    build: .
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${ENV_MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${ENV_MYSQL_DATABASE}
+      - MYSQL_USER=${ENV_MYSQL_USER}
+      - MYSQL_PASSWORD=${ENV_MYSQL_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=${ENV_MYSQL_ALLOW_EMPTY_PASSWORD}
+
+volumes:
+  mysql_data:
