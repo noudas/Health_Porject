@@ -11,6 +11,7 @@ from unittestes.test_insert_paciente_esporte import TestInsertPacienteEsporte
 from unittestes.test_insert_suplemento import TestInsertSuplemento
 from unittestes.test_insert_suplemento_with_dosage_and_form import TestInsertSuplementoWithDosageAndForm
 from unittestes.test_insert_historicofamiliar import TestInsertHistoricoFamiliar
+from unittestes.test_insert_paciente_sintoma_doenca import TestInsertPacienteSintomaDoenca
 
 def suite():
     # Create a test suite
@@ -29,6 +30,7 @@ def suite():
     suite.addTests(loader.loadTestsFromTestCase(TestInsertSuplemento))
     suite.addTests(loader.loadTestsFromTestCase(TestInsertSuplementoWithDosageAndForm))
     suite.addTests(loader.loadTestsFromTestCase(TestInsertHistoricoFamiliar))
+    suite.addTests(loader.loadTestsFromTestCase(TestInsertPacienteSintomaDoenca))
     
     return suite
 

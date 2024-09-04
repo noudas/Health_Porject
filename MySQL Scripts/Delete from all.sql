@@ -1,4 +1,5 @@
 Delete from PacienteAlergia;
+Delete from PacienteSintoma;
 Delete from PacienteEsporte;
 Delete from PacienteSuplemento;
 Delete from SintomaDoenca;
