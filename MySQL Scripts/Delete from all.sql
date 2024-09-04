@@ -1,0 +1,12 @@
+Delete from PacienteAlergia;
+Delete from PacienteEsporte;
+Delete from PacienteSuplemento;
+Delete from SintomaDoenca;
+Delete from HistoricoFamiliar;
+Delete from Alergia;
+Delete from Doenca;
+Delete from Emocional;
+Delete from Esporte;
+Delete from Paciente;
+Delete from Sintoma;
+Delete from Suplemento;
