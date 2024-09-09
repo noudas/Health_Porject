@@ -1,5 +1,22 @@
-FROM mysql:latest
+# Importar imagem
+FROM node:lts as build
 
-COPY init.sql /docker-entrypoint-initdb.d/
+# Escolher o diretorio da base da aplicacao
+WORKDIR /app
 
-EXPOSE 3306
+# Copiar as dependencias
+COPY package.json .
+
+# Instalar as dependencias
+RUN npm install
+
+# Copiar o codigo fonte
+COPY src src
+
+# Rodar com Nodemon
+FROM build as dev
+CMD ["npm","run","dev"]
+
+# Rodar com Node
+FROM build as prod
+CMD ["npm","start"]
