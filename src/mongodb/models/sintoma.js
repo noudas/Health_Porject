@@ -23,6 +23,9 @@ const sintomaSchema = new Schema({
     },
     dataInicio: {
         type: Date
+    },
+    dataFim: {
+        type: Date
     }
 }, { timestamps: true });
 

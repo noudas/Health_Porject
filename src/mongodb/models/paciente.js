@@ -1,11 +1,6 @@
 const { model, Schema } = require('mongoose');
-const alergiaSchema = require('./alergia');
-const emocionalSchema = require('./emocional');
-const esporteSchema = require('./esporte')
-const suplementoSchema = require('./suplemento')
-const sintomaSchema = require('./sintoma')
-const doencaSchema = require('./doenca')
-const historicoFamiliarSchema = require('./historicofamiliar');
+
+const schemas = require('./schemas');
 
 
 const pacienteSchema = new Schema({
@@ -13,7 +8,8 @@ const pacienteSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        length: 11  // Limita a 11 caracteres
+        minlength: 11,
+        maxlength: 11
     },
     Telefone: {
         type: String,
@@ -65,7 +61,7 @@ const pacienteSchema = new Schema({
         max: 999.99, // Limita a 5 dígitos no total e 2 casas decimais
     },
     HorarioAcordar: {
-        type: String, // MongoDB não tem tipo `TIME`, então usamos `String` para armazenar o horário.
+        type: Date,
     },
     Hidratacao: {
         type: String,
@@ -146,6 +142,16 @@ const pacienteSchema = new Schema({
             ref: 'Doenca'
         }
     }],
+
+    dieta: {
+        type: dietaSchema,
+        default: null
+    },
+
+    horarios: {
+        type: [horarioSchema],
+        default: []
+    },
 
 });
 
