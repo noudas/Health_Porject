@@ -1,3 +1,5 @@
+//Suplemento Schema
+
 const { model, Schema } = require('mongoose');
 
 const suplementoSchema = new Schema({

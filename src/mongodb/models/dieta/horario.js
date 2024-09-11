@@ -1,3 +1,5 @@
+//Horario Schema
+
 const { model, Schema } = require('mongoose');
 const alimentoSchema = require('./alimento');
 

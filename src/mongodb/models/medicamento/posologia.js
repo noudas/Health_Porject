@@ -1,4 +1,4 @@
-// posologia.js
+// posologia Schema
 const { model, Schema } = require('mongoose');
 
 const posologiaSchema = new Schema({
@@ -28,5 +28,6 @@ const posologiaSchema = new Schema({
         maxlength: 200
     }
 }, { _id: false });
+
 
 module.exports = posologiaSchema;

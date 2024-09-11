@@ -1,3 +1,5 @@
+//Doenca Schema
+
 const { model, Schema } = require('mongoose');
 const sintomaSchema = require('./sintoma')
 

@@ -1,3 +1,5 @@
+// Sintomas Schema
+
 const { model, Schema } = require('mongoose');
 
 const sintomaSchema = new Schema({

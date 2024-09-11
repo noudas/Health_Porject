@@ -1,3 +1,5 @@
+//Esporte Schema
+
 const { model, Schema } = require('mongoose');
 
 const esporteSchema = new Schema({

@@ -1,3 +1,5 @@
+//Emocional Schema
+
 const { model, Schema } = require('mongoose');
 
 const emocionalSchema = new Schema({

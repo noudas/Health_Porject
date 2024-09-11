@@ -1,3 +1,5 @@
+//Alergia Schema
+
 const { model, Schema } = require('mongoose');
 
 const alergiaSchema = new Schema({
@@ -35,5 +37,4 @@ const alergiaSchema = new Schema({
     pacientes: [{ type: Schema.Types.ObjectId, ref: 'Paciente' }]
 }, { timestamps: true });
 
-const Alergia = model('Alergia', alergiaSchema);
-module.exports = Alergia;
+module.exports = alergiaSchema;

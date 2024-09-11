@@ -1,7 +1,19 @@
+//Paciente Schema
+
 const { model, Schema } = require('mongoose');
 
-const schemas = require('./schemas');
-
+const alergiaSchema = require('./alergia');
+const emocionalSchema = require('./emocional');
+const esporteSchema = require('./esporte');
+const suplementoSchema = require('./suplemento');
+const sintomaSchema = require('./sintoma');
+const doencaSchema = require('./doenca');
+const historicoFamiliarSchema = require('./historicofamiliar');
+const dietaSchema = require('./dieta/dieta');
+const horarioSchema = require('./dieta/horario');
+const alimentoSchema = require('./dieta/alimento');
+const medicamentoSchema = require('./medicamento/medicamento');
+const posologiaSchema = require('./medicamento/posologia');
 
 const pacienteSchema = new Schema({
     CPF: {
@@ -14,16 +26,16 @@ const pacienteSchema = new Schema({
     Telefone: {
         type: String,
         required: true,
-        maxlength: 20  // Limita a 20 caracteres
+        maxlength: 20 // Limita a 20 caracteres
     },
     Celular: {
         type: String,
-        maxlength: 20  // Limita a 20 caracteres
+        maxlength: 20 // Limita a 20 caracteres
     },
     Nome: {
         type: String,
         required: true,
-        maxlength: 100  // Limita a 100 caracteres
+        maxlength: 100 // Limita a 100 caracteres
     },
     Sexo: {
         type: String,
@@ -34,21 +46,21 @@ const pacienteSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        maxlength: 255  // Limita a 255 caracteres
+        maxlength: 255 // Limita a 255 caracteres
     },
     Altura: {
         type: Number,
         min: 0,
-        max: 9999.99, // Altura com até 4 dígitos no total e 2 casas decimais
+        max: 9999.99 // Altura com até 4 dígitos no total e 2 casas decimais
     },
     Peso: {
         type: Number,
         min: 0,
-        max: 999.99, // Peso com até 5 dígitos no total e 2 casas decimais
+        max: 999.99 // Peso com até 5 dígitos no total e 2 casas decimais
     },
     IMC: {
         type: Number,
-        default: function () {
+        get: function() {
             if (this.Altura && this.Peso) {
                 return this.Peso / (this.Altura * this.Altura);
             }
@@ -58,7 +70,7 @@ const pacienteSchema = new Schema({
     CircunferenciaAbdominal: {
         type: Number,
         min: 0,
-        max: 999.99, // Limita a 5 dígitos no total e 2 casas decimais
+        max: 999.99 // Limita a 5 dígitos no total e 2 casas decimais
     },
     HorarioAcordar: {
         type: Date,
@@ -144,22 +156,24 @@ const pacienteSchema = new Schema({
     }],
 
     dieta: {
-        type: dietaSchema,
+        type: Schema.Types.ObjectId,
+        ref: 'Dieta',
         default: null
     },
 
     horarios: {
-        type: [horarioSchema],
+        type: [Schema.Types.ObjectId],
+        ref: 'Horario',
         default: []
     },
 
-    medicamentos: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Medicamento'
-    }],
-
+    medicamentos: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Medicamento'
+        }
+    ],
 });
 
 const Paciente = model('Paciente', pacienteSchema);
-
 module.exports = Paciente;

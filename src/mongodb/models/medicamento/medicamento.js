@@ -1,6 +1,7 @@
-// medicamento.js
+//Medicamento Schema
+
 const { model, Schema } = require('mongoose');
-const detalhesSchema = require('./detalhe');
+const detalheSchema = require('./detalhe'); 
 const posologiaSchema = require('./posologia');
 
 const medicamentoSchema = new Schema({
@@ -9,7 +10,7 @@ const medicamentoSchema = new Schema({
         ref: 'Paciente',
         required: true
     },
-    detalhes: detalhesSchema,
+    detalhes: detalheSchema,
     posologia: posologiaSchema,
     duracaoEfeito: {
         type: String,
@@ -31,4 +32,4 @@ const medicamentoSchema = new Schema({
     }
 }, { timestamps: true });
 
-module.exports = model('Medicamento', medicamentoSchema);
+module.exports = medicamentoSchema;

@@ -1,7 +1,8 @@
-// detalhe.js
-const { model, Schema } = require('mongoose');
+//detalhe Schema
 
-const detalhesSchema = new Schema({
+const { Schema } = require('mongoose');
+
+const detalheSchema = new Schema({
     nome: {
         type: String,
         required: true,
@@ -21,4 +22,4 @@ const detalhesSchema = new Schema({
     }
 }, { _id: false }); // Não cria um id separado para este subdocumento
 
-module.exports = detalhesSchema;
+module.exports = detalheSchema; // Export just the schema, not the model
