@@ -12,6 +12,9 @@ const historicoFamiliarSchema = require('./historicofamiliar');
 const dietaSchema = require('./dieta/dieta');
 const horarioSchema = require('./dieta/horario');
 const alimentoSchema = require('./dieta/alimento');
+const detalhesSchema = require('./medicamento/detalhe')
+const medicamentoSchema = require('./medicamento/medicamento')
+const posologiaSchema = require('./medicamento/posologia')
 
 module.exports = {
     alergia: mongoose.model('Alergia', alergiaSchema),
@@ -23,6 +26,10 @@ module.exports = {
     historicoFamiliar: mongoose.model('HistoricoFamiliar', historicoFamiliarSchema),
     dieta: mongoose.model('Dieta', dietaSchema),
     horario: mongoose.model('Horario', horarioSchema),
-    alimento: mongoose.model('Alimento', alimentoSchema)
+    alimento: mongoose.model('Alimento', alimentoSchema),
+    detalhe: mongoose.model('Detalhe', detalhesSchema),
+    posologia: mongoose.model('Posologia', posologiaSchema),
+    medicamento: mongoose.model('Medicamento', medicamentoSchema)
+
 };
 

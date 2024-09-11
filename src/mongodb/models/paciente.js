@@ -153,6 +153,11 @@ const pacienteSchema = new Schema({
         default: []
     },
 
+    medicamentos: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Medicamento'
+    }],
+
 });
 
 const Paciente = model('Paciente', pacienteSchema);
