@@ -3,8 +3,8 @@
 const express = require('express');
 const router = express.Router();
 const Medicamento = require('../mongodb/models/medicamentoModel');
-const Detalhe = require('../mongodb/models/detalheModel');
-const Posologia = require('../mongodb/models/posologiaModel');
+const Detalhe = require('../mongodb/models/medicamento/detalhe');
+const Posologia = require('../mongodb/models/medicamento/posologia');
 
 // POST: Create a new Medicamento record
 router.post('/medicamentos', async (req, res) => {

@@ -2,9 +2,9 @@
 
 const express = require('express');
 const router = express.Router();
-const Dieta = require('../mongodb/models/dieta');
-const Horario = require('../mongodb/models/horario');
-const Alimento = require('../mongodb/models/alimento');
+const Dieta = require('../mongodb/models/dieta/dieta');
+const Horario = require('../mongodb/models/dieta/horario');
+const Alimento = require('../mongodb/models/dieta/alimento');
 
 // POST: Create a new Dieta record
 router.post('/dietas', async (req, res) => {
@@ -20,18 +20,16 @@ router.post('/dietas', async (req, res) => {
         const horarios = req.body.horarios || [];
 
         // Validate horarios
-        for (let i = 0; i < horarios.length; i++) {
-            if (!horarios[i].tipo || !horarios[i].alimento) {
-                return res.status(400).json({ message: 'Invalid horario structure', horarios[i] });
+        const validHorarios = horarios.map(horario => {
+            if (!horario.tipo || !horario.alimento) {
+                throw new Error(`Invalid horario structure at index ${i}: ${JSON.stringify(horario)}`);
             }
-        }
+            return horario;
+        });
 
         const dieta = new Dieta({
             paciente: pacienteId,
-            horarios: horarios.map(horario => ({
-                tipo: horario.tipo,
-                alimento: horario.alimento
-            })),
+            horarios: validHorarios,
             rotina: req.body.rotina || ''
         });
 
@@ -39,9 +37,10 @@ router.post('/dietas', async (req, res) => {
         res.status(201).json({ message: 'Dieta record created successfully', dieta });
     } catch (error) {
         console.error('Error creating dieta record:', error);
-        res.status(400).json({ message: 'Error creating dieta record', error });
+        res.status(400).json({ message: 'Error creating dieta record', errorMessage: error.message });
     }
 });
+
 
 // GET: Retrieve all Dieta records
 router.get('/dietas', async (req, res) => {
