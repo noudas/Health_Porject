@@ -1,6 +1,4 @@
 const express = require("express");
-const router = express.Router();
-const app = express();
 const path = require('path');
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -9,50 +7,36 @@ const cors = require("cors");
 const mongodbConnect = require('./mongodb/mongodb-client');
 mongodbConnect();
 
-// Import Rotas
-// Paciente
-const pacienteRoutes = require('./routes/pacienteRoutes');
-app.use('/api', pacienteRoutes);
-
-// Alergia
-const alergiaRoutes = require('./routes/alergiaRoutes');
-app.use('/api', alergiaRoutes);
-
-// Doenca
-const doencaRoutes = require('./routes/doencaRoutes');
-app.use('/api', doencaRoutes);
-
-// Emocional
-const emocionalRoutes = require('./routes/emocionalRoutes');
-app.use('/api', emocionalRoutes);
-
-// Esporte
-const esporteRoutes = require('./routes/esporteRoutes');
-app.use('/api', esporteRoutes);
-
-// Historico Familiar
-const historicoFamiliarRoutes = require('./routes/historicoFamiliarRoutes');
-app.use('/api', historicoFamiliarRoutes);
-
-// Sintoma
-const sintomaRoutes = require('./routes/sintomaRoutes');
-app.use('/api', sintomaRoutes);
-
-// Suplemento
-const suplementoRoutes = require('./routes/suplementoRoutes');
-app.use('/api', suplementoRoutes);
-
-// Dieta
-const dietaRoutes = require('./routes/dietaRoutes');
-app.use('/api/dietas', dietaRoutes);
-
-// Medicamento
-const medicamentoRoutes = require('./routes/medicamentoRoutes');
-app.use('/api/medicamentos', medicamentoRoutes);
+const app = express();
 
 // Middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+
+// Import Routes
+const pacienteRoutes = require('./routes/pacienteRoutes');
+const alergiaRoutes = require('./routes/alergiaRoutes');
+const doencaRoutes = require('./routes/doencaRoutes');
+const emocionalRoutes = require('./routes/emocionalRoutes');
+const esporteRoutes = require('./routes/esporteRoutes');
+const historicoFamiliarRoutes = require('./routes/historicoFamiliarRoutes');
+const sintomaRoutes = require('./routes/sintomaRoutes');
+const suplementoRoutes = require('./routes/suplementoRoutes');
+const dietaRoutes = require('./routes/dietaRoutes');
+const medicamentoRoutes = require('./routes/medicamentoRoutes');
+
+// Apply routes
+app.use('/api', pacienteRoutes);
+app.use('/api', alergiaRoutes);
+app.use('/api', doencaRoutes);
+app.use('/api', emocionalRoutes);
+app.use('/api', esporteRoutes);
+app.use('/api', historicoFamiliarRoutes);
+app.use('/api', sintomaRoutes);
+app.use('/api', suplementoRoutes);
+app.use('/api/dietas', dietaRoutes);
+app.use('/api/medicamentos', medicamentoRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -64,9 +48,17 @@ app.use((err, req, res, next) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Health check route
-app.use("/healthcheck", async (req,res) =>{
-    console.log("It just works")
-    res.status(200).json({ message: "ok"})
+app.get("/healthcheck", (req, res) => {
+    console.log("Health check successful");
+    res.status(200).json({ message: "API is running" });
 });
 
-module.exports = app;
+// Catch-all route for unknown endpoints
+app.all('*', (req, res) => {
+    res.status(404).json({ message: "Endpoint not found" });
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+});

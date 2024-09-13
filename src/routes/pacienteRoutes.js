@@ -5,12 +5,48 @@ const Paciente = require('../mongodb/models/paciente');
 // POST: Create a new Paciente
 router.post('/pacientes', async (req, res) => {
     try {
-        console.log('Entrou no Post Paciente')
-        const paciente = new Paciente(req.body);
+        console.log('Entrou no Post Paciente');
+        
+        const { CPF, Telefone, Celular, Nome, Sexo, Email, Altura, Peso, CircunferenciaAbdominal, HorarioAcordar, Hidratacao, Sono, Intestino, DataNascimento, alergias, emocionais, esportes, suplementos, sintomas, doencas, historicosFamiliares, dieta, horarios, medicamentos } = req.body;
+
+        if (!CPF || !Telefone || !Nome || !Sexo || !Email || !Altura || !Peso || !CircunferenciaAbdominal || !HorarioAcordar || !Hidratacao || !Sono || !Intestino || !DataNascimento) {
+            return res.status(400).json({ message: "Missing required fields" });
+        }
+
+        const pacienteData = {
+            CPF,
+            Telefone,
+            Celular,
+            Nome,
+            Sexo,
+            Email,
+            Altura: parseFloat(Altura), // Ensure number conversion
+            Peso: parseFloat(Peso),     // Ensure number conversion
+            CircunferenciaAbdominal: parseFloat(CircunferenciaAbdominal),
+            HorarioAcordar,
+            Hidratacao,
+            Sono,
+            Intestino,
+            DataNascimento,
+            alergias,
+            emocionais,
+            esportes,
+            suplementos,
+            sintomas,
+            doencas,
+            historicosFamiliares,
+            dieta,
+            horarios,
+            medicamentos
+        };
+
+        const paciente = new Paciente(pacienteData);
         await paciente.save();
+
         res.status(201).json({ message: "Paciente created successfully", paciente });
     } catch (error) {
-        res.status(400).json({ message: "Error creating paciente", error });
+        console.error('Error creating paciente:', error.message, error.stack);
+        res.status(400).json({ message: "Error creating paciente", error: error.message });
     }
 });
 
@@ -38,7 +74,36 @@ router.get('/pacientes/:id', async (req, res) => {
 // PUT: Update a Paciente by ID
 router.put('/pacientes/:id', async (req, res) => {
     try {
-        const updatedPaciente = await Paciente.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate('alergias emocionais esportes.suplemento suplementos.suplemento sintomas doencas historicosFamiliares.doenca dieta horarios medicamentos');
+        const { CPF, Telefone, Celular, Nome, Sexo, Email, Altura, Peso, CircunferenciaAbdominal, HorarioAcordar, Hidratacao, Sono, Intestino, DataNascimento, alergias, emocionais, esportes, suplementos, sintomas, doencas, historicosFamiliares, dieta, horarios, medicamentos } = req.body;
+
+        const updateData = {
+            CPF,
+            Telefone,
+            Celular,
+            Nome,
+            Sexo,
+            Email,
+            Altura: parseFloat(Altura), // Ensure number conversion
+            Peso: parseFloat(Peso),     // Ensure number conversion
+            CircunferenciaAbdominal: parseFloat(CircunferenciaAbdominal),
+            HorarioAcordar,
+            Hidratacao,
+            Sono,
+            Intestino,
+            DataNascimento,
+            alergias,
+            emocionais,
+            esportes,
+            suplementos,
+            sintomas,
+            doencas,
+            historicosFamiliares,
+            dieta,
+            horarios,
+            medicamentos
+        };
+
+        const updatedPaciente = await Paciente.findByIdAndUpdate(req.params.id, updateData, { new: true }).populate('alergias emocionais esportes.suplemento suplementos.suplemento sintomas doencas historicosFamiliares.doenca dieta horarios medicamentos');
         if (!updatedPaciente) return res.status(404).json({ message: "Paciente not found" });
         res.status(200).json({ message: "Paciente updated successfully", updatedPaciente });
     } catch (error) {
