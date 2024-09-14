@@ -9,6 +9,9 @@ const { isEmpty } = require('../utils/objUtils');
 // POST: Create a new Emocional record
 router.post('/emocionals', async (req, res) => {
     try {
+        const { paciente, descricao, espectro } = req.body; // Destructuring req.body
+
+        // Validate required fields
         const requiredFields = ['paciente', 'descricao', 'espectro'];
         const missingFields = requiredFields.filter(field => isEmpty(req.body[field]));
 
@@ -16,15 +19,17 @@ router.post('/emocionals', async (req, res) => {
             return res.status(400).json({ message: 'Missing required fields', missingFields });
         }
 
-        const paciente = await Paciente.findById(req.body.paciente);
-        if (!paciente) {
+        // Validate paciente existence
+        const foundPaciente = await Paciente.findById(paciente);
+        if (!foundPaciente) {
             return res.status(404).json({ message: 'Paciente not found' });
         }
 
+        // Create a new Emocional record
         const emocional = new Emocional({
-            paciente: paciente._id,
-            descricao: req.body.descricao,
-            espectro: req.body.espectro
+            paciente: foundPaciente._id,
+            descricao,
+            espectro
         });
 
         await emocional.save();
@@ -62,6 +67,7 @@ router.get('/pacientes/:pacienteId/emocionals', async (req, res) => {
 router.put('/emocionals/:id', async (req, res) => {
     try {
         const id = req.params.id;
+        const { descricao, espectro } = req.body; // Destructuring req.body
 
         // Find the emocional record
         let emocional = await Emocional.findById(id);
@@ -70,8 +76,8 @@ router.put('/emocionals/:id', async (req, res) => {
         }
 
         // Update fields
-        emocional.descricao = req.body.descricao || emocional.descricao;
-        emocional.espectro = req.body.espectro || emocional.espectro;
+        emocional.descricao = descricao || emocional.descricao;
+        emocional.espectro = espectro || emocional.espectro;
 
         // Save the changes
         emocional = await emocional.save();

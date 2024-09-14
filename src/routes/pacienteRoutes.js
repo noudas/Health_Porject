@@ -5,7 +5,6 @@ const Paciente = require('../mongodb/models/paciente');
 // POST: Create a new Paciente
 router.post('/pacientes', async (req, res) => {
     try {
-        console.log('Entrou no Post Paciente');
         
         const { CPF, Telefone, Celular, Nome, Sexo, Email, Altura, Peso, CircunferenciaAbdominal, HorarioAcordar, Hidratacao, Sono, Intestino, DataNascimento, alergias, emocionais, esportes, suplementos, sintomas, doencas, historicosFamiliares, dieta, horarios, medicamentos } = req.body;
 
@@ -53,7 +52,7 @@ router.post('/pacientes', async (req, res) => {
 // GET: Retrieve all Pacientes
 router.get('/pacientes', async (req, res) => {
     try {
-        const pacientes = await Paciente.find().populate('alergias emocionais esportes.suplemento suplementos.suplemento sintomas doencas historicosFamiliares.doenca dieta horarios medicamentos');
+        const pacientes = await Paciente.find();
         res.status(200).json(pacientes);
     } catch (error) {
         res.status(500).json({ message: "Error retrieving pacientes", error });
@@ -63,7 +62,7 @@ router.get('/pacientes', async (req, res) => {
 // GET: Retrieve a Paciente by ID
 router.get('/pacientes/:id', async (req, res) => {
     try {
-        const paciente = await Paciente.findById(req.params.id).populate('alergias emocionais esportes.suplemento suplementos.suplemento sintomas doencas historicosFamiliares.doenca dieta horarios medicamentos');
+        const paciente = await Paciente.findById(req.params.id);
         if (!paciente) return res.status(404).json({ message: "Paciente not found" });
         res.status(200).json(paciente);
     } catch (error) {

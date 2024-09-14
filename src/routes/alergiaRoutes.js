@@ -1,5 +1,3 @@
-// alergiaRoutes.js
-
 const express = require('express');
 const router = express.Router();
 const Alergia = require('../mongodb/models/alergia');
@@ -8,6 +6,7 @@ const { isEmpty } = require('../utils/objUtils');
 // POST: Create a new Alergia
 router.post('/alergias', async (req, res) => {
     try {
+        const { nome, tipo, severidade, descricao } = req.body;
         const requiredFields = ['nome', 'tipo', 'severidade'];
         const missingFields = requiredFields.filter(field => isEmpty(req.body[field]));
 
@@ -15,7 +14,7 @@ router.post('/alergias', async (req, res) => {
             return res.status(400).json({ message: 'Missing required fields', missingFields });
         }
 
-        const alergia = new Alergia(req.body);
+        const alergia = new Alergia({ nome, tipo, severidade, descricao });
         await alergia.save();
         res.status(201).json({ message: 'Alergia created successfully', alergia });
     } catch (error) {
@@ -38,7 +37,7 @@ router.get('/alergias', async (req, res) => {
 // GET: Retrieve a specific Alergia by ID
 router.get('/alergias/:id', async (req, res) => {
     try {
-        const id = req.params.id;
+        const { id } = req.params;
         const alergia = await Alergia.findById(id).populate('pacientes');
         if (!alergia) {
             return res.status(404).json({ message: 'Alergia not found' });
@@ -53,8 +52,11 @@ router.get('/alergias/:id', async (req, res) => {
 // PUT: Update an existing Alergia
 router.put('/alergias/:id', async (req, res) => {
     try {
-        const id = req.params.id;
-        const updatedAlergia = await Alergia.findByIdAndUpdate(id, req.body, { new: true }).populate('pacientes');
+        const { id } = req.params;
+        const { nome, tipo, severidade, descricao } = req.body;
+
+        const updateData = { nome, tipo, severidade, descricao };
+        const updatedAlergia = await Alergia.findByIdAndUpdate(id, updateData, { new: true }).populate('pacientes');
         if (!updatedAlergia) {
             return res.status(404).json({ message: 'Alergia not found' });
         }
@@ -68,7 +70,7 @@ router.put('/alergias/:id', async (req, res) => {
 // DELETE: Delete an Alergia by ID
 router.delete('/alergias/:id', async (req, res) => {
     try {
-        const id = req.params.id;
+        const { id } = req.params;
         const deletedAlergia = await Alergia.findByIdAndDelete(id);
         if (!deletedAlergia) {
             return res.status(404).json({ message: 'Alergia not found' });
