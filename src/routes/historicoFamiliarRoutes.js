@@ -8,7 +8,7 @@ const Doenca = require('../mongodb/models/doenca');
 const { isEmpty } = require('../utils/objUtils');
 
 // POST: Create a new HistoricoFamiliar record
-router.post('/historicos-familiares', async (req, res) => {
+router.post('/historicosfamiliares', async (req, res) => {
     try {
         const requiredFields = ['paciente', 'doenca', 'relacaoFamiliar'];
         const missingFields = requiredFields.filter(field => isEmpty(req.body[field]));
@@ -37,12 +37,13 @@ router.post('/historicos-familiares', async (req, res) => {
         res.status(201).json({ message: 'HistoricoFamiliar record created successfully', historicoFamiliar });
     } catch (error) {
         console.error('Error creating historicoFamiliar record:', error);
-        res.status(400).json({ message: 'Error creating historicoFamiliar record', error });
+        res.status(400).json({ message: 'Error creating historicoFamiliar record', error: error.message });
     }
 });
 
+
 // GET: Retrieve all HistoricoFamiliar records
-router.get('/historicos-familiares', async (req, res) => {
+router.get('/historicosfamiliares', async (req, res) => {
     try {
         const historicosFamiliares = await HistoricoFamiliar.find()
             .populate('paciente')
@@ -55,7 +56,7 @@ router.get('/historicos-familiares', async (req, res) => {
 });
 
 // GET: Retrieve HistoricoFamiliar records for a specific Paciente
-router.get('/pacientes/:pacienteId/historicos-familiares', async (req, res) => {
+router.get('/pacientes/:pacienteId/historicosfamiliares', async (req, res) => {
     try {
         const pacienteId = req.params.pacienteId;
         const historicosFamiliares = await HistoricoFamiliar.find({ paciente: pacienteId })
@@ -69,7 +70,7 @@ router.get('/pacientes/:pacienteId/historicos-familiares', async (req, res) => {
 });
 
 // PUT: Update an existing HistoricoFamiliar record
-router.put('/historicos-familiares/:id', async (req, res) => {
+router.put('/historicosfamiliares/:id', async (req, res) => {
     try {
         const id = req.params.id;
 
@@ -92,7 +93,7 @@ router.put('/historicos-familiares/:id', async (req, res) => {
 });
 
 // DELETE: Delete a HistoricoFamiliar record by ID
-router.delete('/historicos-familiares/:id', async (req, res) => {
+router.delete('/historicosfamiliares/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const deletedHistoricoFamiliar = await HistoricoFamiliar.findByIdAndDelete(id);

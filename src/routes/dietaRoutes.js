@@ -1,10 +1,12 @@
 // dietaRoutes.js
 
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const Dieta = require('../mongodb/models/dieta/dieta');
 const Horario = require('../mongodb/models/dieta/horario');
 const Alimento = require('../mongodb/models/dieta/alimento');
+const Paciente = require('../mongodb/models/paciente');
 
 // POST: Create a new Dieta record
 router.post('/dietas', async (req, res) => {
@@ -105,6 +107,52 @@ router.delete('/dietas/:id', async (req, res) => {
     } catch (error) {
         console.error('Error deleting dieta record:', error);
         res.status(500).json({ message: 'Error deleting dieta record', error });
+    }
+});
+
+// POST: Create a new Horario record
+router.post('/horarios', async (req, res) => {
+    try {
+        const { paciente, hora, tipo, alimento, observacoes } = req.body;
+
+        // Validate required fields
+        if (!paciente || !hora || !tipo) {
+            return res.status(400).json({ message: 'Missing required fields: paciente, hora, and tipo are required.' });
+        }
+
+        // Validate if paciente and alimento IDs are valid ObjectIds
+        if (!mongoose.Types.ObjectId.isValid(paciente)) {
+            return res.status(400).json({ message: 'Invalid paciente ID' });
+        }
+        if (alimento && !mongoose.Types.ObjectId.isValid(alimento)) {
+            return res.status(400).json({ message: 'Invalid alimento ID' });
+        }
+
+        // Check if paciente and alimento exist
+        const pacienteExists = await Paciente.findById(paciente);
+        if (!pacienteExists) {
+            return res.status(404).json({ message: 'Paciente not found' });
+        }
+        if (alimento) {
+            const alimentoExists = await Alimento.findById(alimento);
+            if (!alimentoExists) {
+                return res.status(404).json({ message: 'Alimento not found' });
+            }
+        }
+
+        const horario = new Horario({
+            paciente,
+            hora,
+            tipo,
+            alimento,
+            observacoes
+        });
+
+        await horario.save();
+        res.status(201).json({ message: 'Horario record created successfully', horario });
+    } catch (error) {
+        console.error('Error creating horario record:', error);
+        res.status(400).json({ message: 'Error creating horario record', errorMessage: error.message });
     }
 });
 
@@ -268,7 +316,7 @@ router.post('/alimentos', async (req, res) => {
         res.status(201).json({ message: 'Alimento record created successfully', alimento });
     } catch (error) {
         console.error('Error creating alimento record:', error);
-        res.status(400).json({ message: 'Error creating alimento record', error });
+        res.status(400).json({ message: 'Error creating alimento record', errorMessage: error.message });
     }
 });
 

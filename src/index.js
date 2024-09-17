@@ -35,8 +35,8 @@ app.use('/api', esporteRoutes);
 app.use('/api', historicoFamiliarRoutes);
 app.use('/api', sintomaRoutes);
 app.use('/api', suplementoRoutes);
-app.use('/api/dietas', dietaRoutes);
-app.use('/api/medicamentos', medicamentoRoutes);
+app.use('/api', dietaRoutes);
+app.use('/api', medicamentoRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

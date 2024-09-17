@@ -1,8 +1,6 @@
-//Historico Familiar Schema
-
 const { model, Schema } = require('mongoose');
-const pacienteSchema = require('./paciente'); // Assuming you have the Paciente schema defined
-const doencaSchema = require('./doenca'); // Assuming you have the Doenca schema defined
+const pacienteSchema = require('./paciente'); // Ensure these paths are correct
+const doencaSchema = require('./doenca');
 
 const historicoFamiliarSchema = new Schema({
     paciente: {
@@ -22,4 +20,5 @@ const historicoFamiliarSchema = new Schema({
     }
 }, { timestamps: true });
 
-module.exports = historicoFamiliarSchema;
+const HistoricoFamiliar = model('HistoricoFamiliar', historicoFamiliarSchema);
+module.exports = HistoricoFamiliar;

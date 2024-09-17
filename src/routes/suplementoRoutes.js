@@ -15,14 +15,28 @@ router.post('/suplementos', async (req, res) => {
             return res.status(400).json({ message: 'Missing required fields', missingFields });
         }
 
+        // Additional validation (optional but recommended)
+        const validTipos = ['Vitamina', 'Mineral', 'Aminoácido', 'Fitoterápico', 'Proteína', 'Enzima', 'Probiótico', 'Ácido Graxo', 'Antioxidante', 'Carboidrato', 'Fibras', 'Outros'];
+        const validFormas = ['Comprimido', 'Cápsula', 'Pó', 'Líquido', 'Gel', 'Goma', 'Spray', 'Tablete', 'Pastilha', 'Sachê', 'Injetável', 'Outros'];
+
+        if (!validTipos.includes(req.body.tipo)) {
+            return res.status(400).json({ message: 'Invalid tipo value', validTipos });
+        }
+        
+        if (!validFormas.includes(req.body.forma)) {
+            return res.status(400).json({ message: 'Invalid forma value', validFormas });
+        }
+
+        // Creating the Suplemento document
         const suplemento = new Suplemento({
             nome: req.body.nome,
-            descricao: req.body.descricao || '',
+            descricao: req.body.descricao || '', // Provide a default empty string if descricao is missing
             dosagem: req.body.dosagem,
             tipo: req.body.tipo,
             forma: req.body.forma
         });
 
+        // Saving the new Suplemento record
         await suplemento.save();
         res.status(201).json({ message: 'Suplemento record created successfully', suplemento });
     } catch (error) {
@@ -30,6 +44,7 @@ router.post('/suplementos', async (req, res) => {
         res.status(400).json({ message: 'Error creating suplemento record', error });
     }
 });
+
 
 // GET: Retrieve all Suplementos records
 router.get('/suplementos', async (req, res) => {
