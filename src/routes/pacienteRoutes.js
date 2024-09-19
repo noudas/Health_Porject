@@ -71,44 +71,56 @@ router.get('/pacientes/:id', async (req, res) => {
 });
 
 // PUT: Update a Paciente by ID
+// PUT: Update a Paciente by ID
 router.put('/pacientes/:id', async (req, res) => {
     try {
-        const { CPF, Telefone, Celular, Nome, Sexo, Email, Altura, Peso, CircunferenciaAbdominal, HorarioAcordar, Hidratacao, Sono, Intestino, DataNascimento, alergias, emocionais, esportes, suplementos, sintomas, doencas, historicosFamiliares, dieta, horarios, medicamentos } = req.body;
+        const { 
+            CPF, Telefone, Celular, Nome, Sexo, Email, Altura, Peso, 
+            CircunferenciaAbdominal, HorarioAcordar, Hidratacao, Sono, 
+            Intestino, DataNascimento, alergias, emocionais, esportes, 
+            suplementos, sintomas, doencas, historicosFamiliares, dieta, 
+            horarios, medicamentos 
+        } = req.body;
 
-        const updateData = {
-            CPF,
-            Telefone,
-            Celular,
-            Nome,
-            Sexo,
-            Email,
-            Altura: parseFloat(Altura), // Ensure number conversion
-            Peso: parseFloat(Peso),     // Ensure number conversion
-            CircunferenciaAbdominal: parseFloat(CircunferenciaAbdominal),
-            HorarioAcordar,
-            Hidratacao,
-            Sono,
-            Intestino,
-            DataNascimento,
-            alergias,
-            emocionais,
-            esportes,
-            suplementos,
-            sintomas,
-            doencas,
-            historicosFamiliares,
-            dieta,
-            horarios,
-            medicamentos
-        };
+        // Prepare updateData with only provided fields
+        const updateData = {};
+        
+        if (CPF) updateData.CPF = CPF;
+        if (Telefone) updateData.Telefone = Telefone;
+        if (Celular) updateData.Celular = Celular;
+        if (Nome) updateData.Nome = Nome;
+        if (Sexo) updateData.Sexo = Sexo;
+        if (Email) updateData.Email = Email;
+        if (Altura) updateData.Altura = parseFloat(Altura); // Ensure number conversion
+        if (Peso) updateData.Peso = parseFloat(Peso);     // Ensure number conversion
+        if (CircunferenciaAbdominal) updateData.CircunferenciaAbdominal = parseFloat(CircunferenciaAbdominal);
+        if (HorarioAcordar) updateData.HorarioAcordar = HorarioAcordar;
+        if (Hidratacao) updateData.Hidratacao = Hidratacao;
+        if (Sono) updateData.Sono = Sono;
+        if (Intestino) updateData.Intestino = Intestino;
+        if (DataNascimento) updateData.DataNascimento = DataNascimento;
+        if (alergias) updateData.alergias = alergias;
+        if (emocionais) updateData.emocionais = emocionais;
+        if (esportes) updateData.esportes = esportes;
+        if (suplementos) updateData.suplementos = suplementos;
+        if (sintomas) updateData.sintomas = sintomas;
+        if (doencas) updateData.doencas = doencas;
+        if (historicosFamiliares) updateData.historicosFamiliares = historicosFamiliares;
+        if (dieta) updateData.dieta = dieta;
+        if (horarios) updateData.horarios = horarios;
+        if (medicamentos) updateData.medicamentos = medicamentos;
 
-        const updatedPaciente = await Paciente.findByIdAndUpdate(req.params.id, updateData, { new: true }).populate('alergias emocionais esportes.suplemento suplementos.suplemento sintomas doencas historicosFamiliares.doenca dieta horarios medicamentos');
+        const updatedPaciente = await Paciente.findByIdAndUpdate(req.params.id, updateData, { new: true })
+            .populate('alergias emocionais sintomas doencas historicosFamiliares.doenca dieta horarios medicamentos');
+        
         if (!updatedPaciente) return res.status(404).json({ message: "Paciente not found" });
         res.status(200).json({ message: "Paciente updated successfully", updatedPaciente });
     } catch (error) {
-        res.status(500).json({ message: "Error updating paciente", error });
+        console.error('Error updating paciente:', error.message, error.stack);
+        res.status(500).json({ message: "Error updating paciente", error: error.message });
     }
 });
+
 
 // DELETE: Delete a Paciente by ID
 router.delete('/pacientes/:id', async (req, res) => {

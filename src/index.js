@@ -25,6 +25,9 @@ const sintomaRoutes = require('./routes/sintomaRoutes');
 const suplementoRoutes = require('./routes/suplementoRoutes');
 const dietaRoutes = require('./routes/dietaRoutes');
 const medicamentoRoutes = require('./routes/medicamentoRoutes');
+const medicoRoutes = require('./routes/medicoRoute');
+const atendimentoRoutes = require('./routes/atendimentoRoute');
+const receitaRoutes = require('./routes/receitaRoutes');
 
 // Apply routes
 app.use('/api', pacienteRoutes);
@@ -37,6 +40,9 @@ app.use('/api', sintomaRoutes);
 app.use('/api', suplementoRoutes);
 app.use('/api', dietaRoutes);
 app.use('/api', medicamentoRoutes);
+app.use('/api', medicoRoutes);
+app.use('/api', atendimentoRoutes);
+app.use('/api', receitaRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
