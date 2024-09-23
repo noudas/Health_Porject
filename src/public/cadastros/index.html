@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Suplementos</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Linking the CSS file -->
+</head>
+<body>
+
+    <h1>Gestão de Suplementos</h1>
+
+    <!-- Formulário para registrar um novo suplemento -->
+    <h2>Registrar Novo Suplemento</h2>
+    <form id="suplementoForm">
+        <input type="text" id="nome" placeholder="Nome" required>
+        <input type="text" id="dosagem" placeholder="Dosagem" required>
+        <select id="tipo" required>
+            <option value="" disabled selected>Selecione o Tipo</option>
+            <option value="Vitamina">Vitamina</option>
+            <option value="Mineral">Mineral</option>
+            <option value="Aminoácido">Aminoácido</option>
+            <option value="Fitoterápico">Fitoterápico</option>
+            <option value="Proteína">Proteína</option>
+            <option value="Enzima">Enzima</option>
+            <option value="Probiótico">Probiótico</option>
+            <option value="Ácido Graxo">Ácido Graxo</option>
+            <option value="Antioxidante">Antioxidante</option>
+            <option value="Carboidrato">Carboidrato</option>
+            <option value="Fibras">Fibras</option>
+            <option value="Outros">Outros</option>
+        </select>
+        <select id="forma" required>
+            <option value="" disabled selected>Selecione a Forma</option>
+            <option value="Comprimido">Comprimido</option>
+            <option value="Cápsula">Cápsula</option>
+            <option value="Pó">Pó</option>
+            <option value="Líquido">Líquido</option>
+            <option value="Gel">Gel</option>
+            <option value="Goma">Goma</option>
+            <option value="Spray">Spray</option>
+            <option value="Tablete">Tablete</option>
+            <option value="Pastilha">Pastilha</option>
+            <option value="Sachê">Sachê</option>
+            <option value="Injetável">Injetável</option>
+            <option value="Outros">Outros</option>
+        </select>
+        <button type="submit">Registrar</button>
+    </form>
+
+    <!-- Tabela para visualizar suplementos -->
+    <h2>Lista de Suplementos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Dosagem</th>
+                <th>Tipo</th>
+                <th>Forma</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="suplementoTableBody">
+            <!-- Suplementos serão listados aqui -->
+        </tbody>
+    </table>
+
+    <script src="app.js"></script> <!-- Linking the JS file -->
+</body>
+</html>
