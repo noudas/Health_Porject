@@ -5,8 +5,13 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const Dieta = require('../mongodb/models/dieta/dieta');
 const Horario = require('../mongodb/models/dieta/horario');
-const Alimento = require('../mongodb/models/dieta/alimento');
+const { Alimento, vitaminasEnum, unidadesMedidaEnum, mineraisEnum } = require('../mongodb/models/dieta/alimento');
 const Paciente = require('../mongodb/models/paciente');
+
+
+
+
+
 
 // POST: Create a new Dieta record
 router.post('/dietas', async (req, res) => {
@@ -156,6 +161,19 @@ router.post('/horarios', async (req, res) => {
     }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 // GET: Retrieve all Horarios records
 router.get('/horarios', async (req, res) => {
     try {
@@ -224,6 +242,17 @@ router.delete('/horarios/:id', async (req, res) => {
     }
 });
 
+
+
+
+
+
+
+
+
+
+
+
 // GET: Retrieve all Alimento records
 router.get('/alimentos', async (req, res) => {
     try {
@@ -261,22 +290,61 @@ router.put('/alimentos/:id', async (req, res) => {
             return res.status(404).json({ message: 'Alimento record not found' });
         }
 
+        // Validação adicional para vitaminas e minerais
+        const validateNutrient = (nutrient) => {
+            if (!nutrient.tipo || !vitaminasEnum.includes(nutrient.tipo)) {
+                throw new Error('Invalid vitamina type');
+            }
+            if (typeof nutrient.quantidade !== 'number' || nutrient.quantidade <= 0) {
+                throw new Error('Invalid quantidade value');
+            }
+            if (!unidadesMedidaEnum.includes(nutrient.unidadeMedida)) {
+                throw new Error('Invalid unidadeMedida');
+            }
+        };
+
+        const validateMineral = (mineral) => {
+            if (!mineral.tipo || !mineraisEnum.includes(mineral.tipo)) {
+                throw new Error('Invalid mineral type');
+            }
+            if (typeof mineral.quantidade !== 'number' || mineral.quantidade <= 0) {
+                throw new Error('Invalid quantidade value');
+            }
+            if (!unidadesMedidaEnum.includes(mineral.unidadeMedida)) {
+                throw new Error('Invalid unidadeMedida');
+            }
+        };
+
+        try {
+            req.body.vitaminas?.forEach(validateNutrient);
+            req.body.minerais?.forEach(validateMineral);
+        } catch (error) {
+            return res.status(400).json({ message: error.message });
+        }
+
         // Update fields
         alimento.nome = req.body.nome || alimento.nome;
         alimento.tipo = req.body.tipo || alimento.tipo;
         alimento.porcao = req.body.porcao || alimento.porcao;
         alimento.calorias = req.body.calorias || alimento.calorias;
-        alimento.vitaminas = req.body.vitaminas || alimento.vitaminas;
-        alimento.minerais = req.body.minerais || alimento.minerais;
+        
+        // Atualizar vitaminas e minerais
+        if (req.body.vitaminas) {
+            alimento.vitaminas = req.body.vitaminas;
+        }
+        if (req.body.minerais) {
+            alimento.minerais = req.body.minerais;
+        }
 
         // Save the changes
         alimento = await alimento.save();
         res.status(200).json({ message: 'Alimento record updated successfully', alimento });
     } catch (error) {
         console.error('Error updating alimento record:', error);
-        res.status(400).json({ message: 'Error updating alimento record', error });
+        res.status(400).json({ message: 'Error updating alimento record', errorMessage: error.message });
     }
 });
+
 
 // DELETE: Delete an Alimento record by ID
 router.delete('/alimentos/:id', async (req, res) => {
@@ -303,6 +371,38 @@ router.post('/alimentos', async (req, res) => {
             return res.status(400).json({ message: 'Missing required fields', missingFields });
         }
 
+        // Validação adicional para vitaminas e minerais
+        const validateNutrient = (nutrient) => {
+            if (!nutrient.tipo || !vitaminasEnum.includes(nutrient.tipo)) {
+                throw new Error('Invalid vitamina type');
+            }
+            if (typeof nutrient.quantidade !== 'number' || nutrient.quantidade <= 0) {
+                throw new Error('Invalid quantidade value');
+            }
+            if (!unidadesMedidaEnum.includes(nutrient.unidadeMedida)) {
+                throw new Error('Invalid unidadeMedida');
+            }
+        };
+
+        const validateMineral = (mineral) => {
+            if (!mineral.tipo || !mineraisEnum.includes(mineral.tipo)) {
+                throw new Error('Invalid mineral type');
+            }
+            if (typeof mineral.quantidade !== 'number' || mineral.quantidade <= 0) {
+                throw new Error('Invalid quantidade value');
+            }
+            if (!unidadesMedidaEnum.includes(mineral.unidadeMedida)) {
+                throw new Error('Invalid unidadeMedida');
+            }
+        };
+
+        try {
+            req.body.vitaminas?.forEach(validateNutrient);
+            req.body.minerais?.forEach(validateMineral);
+        } catch (error) {
+            return res.status(400).json({ message: error.message });
+        }
+
         const alimento = new Alimento({
             nome: req.body.nome,
             tipo: req.body.tipo,
@@ -319,6 +419,7 @@ router.post('/alimentos', async (req, res) => {
         res.status(400).json({ message: 'Error creating alimento record', errorMessage: error.message });
     }
 });
+
 
 // GET: Search Alimentos by name or type
 router.get('/alimentos/search', async (req, res) => {
@@ -348,5 +449,14 @@ router.get('/alimentos/search', async (req, res) => {
         res.status(500).json({ message: 'Error searching alimentos', error });
     }
 });
+
+router.get('/enums', (req, res) => {
+    res.json({
+        vitaminas: vitaminasEnum,
+        unidadesMedida: unidadesMedidaEnum,
+        minerais: mineraisEnum
+    });
+});
+
 
 module.exports = router;
