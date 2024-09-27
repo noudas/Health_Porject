@@ -1,6 +1,6 @@
-// alimentos.js
+//alimentos.js
 
-document.addEventListener('DOMContentLoaded',async () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
     let vitaminasEnum = [];
     let unidadesMedidaEnum = [];
@@ -21,8 +21,6 @@ document.addEventListener('DOMContentLoaded',async () => {
         console.error('Error fetching enums:', error);
     }
 
-    
-    // Function to load alimentos
     async function loadAlimentos() {
         const contentDiv = document.getElementById('registroContent');
 
@@ -72,7 +70,7 @@ document.addEventListener('DOMContentLoaded',async () => {
                             <tbody>
                                 <tr>
                                     <td> 
-                                        <select name="vitaminas[0][nome]">
+                                        <select name="vitaminas[0][tipo]"> <!-- Changed 'nome' to 'tipo' -->
                                             ${vitaminasEnum.map(vitamina => `<option value="${vitamina}">${vitamina}</option>`).join('')}
                                         </select>
                                     </td>
@@ -103,7 +101,7 @@ document.addEventListener('DOMContentLoaded',async () => {
                             <tbody>
                                 <tr>
                                     <td>
-                                        <select name="minerais[0][nome]">
+                                        <select name="minerais[0][tipo]"> <!-- Changed 'nome' to 'tipo' -->
                                             ${mineraisEnum.map(mineral => `<option value="${mineral}">${mineral}</option>`).join('')}
                                         </select>
                                     </td>
@@ -141,6 +139,7 @@ document.addEventListener('DOMContentLoaded',async () => {
             `;
 
             contentDiv.innerHTML = html;
+
 
             // Function to add more rows for vitamins
             window.addVitaminaRow = function addVitaminaRow() {
@@ -236,39 +235,55 @@ document.addEventListener('DOMContentLoaded',async () => {
 
             document.getElementById('alimentoForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
-        
+            
                 const formData = new FormData(e.target);
                 const id = e.target.dataset.id;
-        
+            
                 // Convert FormData to JSON, including vitamins and minerals
                 const jsonData = {};
                 formData.forEach((value, key) => {
                     jsonData[key] = value;
                 });
-        
+            
                 // Handle vitaminas and minerais arrays
                 const vitaminas = [];
                 const minerais = [];
-        
+            
+                // Fix for vitamin extraction
                 document.querySelectorAll('#vitaminasTable tbody tr').forEach((row, index) => {
-                    vitaminas.push({
-                        nome: row.querySelector(`input[name="vitaminas[${index}][nome]"]`).value,
-                        quantidade: parseFloat(row.querySelector(`input[name="vitaminas[${index}][quantidade]"]`).value),
-                        unidadeMedida: row.querySelector(`select[name="vitaminas[${index}][unidadeMedida]"]`).value,
-                    });
+                    const nomeInput = row.querySelector(`select[name="vitaminas[${index}][tipo]"]`);
+                    const quantidadeInput = row.querySelector(`input[name="vitaminas[${index}][quantidade]"]`);
+                    const unidadeInput = row.querySelector(`select[name="vitaminas[${index}][unidadeMedida]"]`);
+            
+                    // Ensure all fields exist before accessing their values
+                    if (nomeInput && quantidadeInput && unidadeInput) {
+                        vitaminas.push({
+                            tipo: nomeInput.value, // Corrected 'nome' to 'tipo'
+                            quantidade: parseFloat(quantidadeInput.value) || 0,
+                            unidadeMedida: unidadeInput.value,
+                        });
+                    }
                 });
-        
+            
+                // Fix for mineral extraction
                 document.querySelectorAll('#mineraisTable tbody tr').forEach((row, index) => {
-                    minerais.push({
-                        nome: row.querySelector(`input[name="minerais[${index}][nome]"]`).value,
-                        quantidade: parseFloat(row.querySelector(`input[name="minerais[${index}][quantidade]"]`).value),
-                        unidadeMedida: row.querySelector(`select[name="minerais[${index}][unidadeMedida]"]`).value,
-                    });
+                    const nomeInput = row.querySelector(`select[name="minerais[${index}][tipo]"]`);
+                    const quantidadeInput = row.querySelector(`input[name="minerais[${index}][quantidade]"]`);
+                    const unidadeInput = row.querySelector(`select[name="minerais[${index}][unidadeMedida]"]`);
+            
+                    // Ensure all fields exist before accessing their values
+                    if (nomeInput && quantidadeInput && unidadeInput) {
+                        minerais.push({
+                            tipo: nomeInput.value, // Corrected 'nome' to 'tipo'
+                            quantidade: parseFloat(quantidadeInput.value) || 0,
+                            unidadeMedida: unidadeInput.value,
+                        });
+                    }
                 });
-        
+            
                 jsonData.vitaminas = vitaminas;
                 jsonData.minerais = minerais;
-        
+            
                 let response;
                 try {
                     if (id) {
@@ -290,14 +305,23 @@ document.addEventListener('DOMContentLoaded',async () => {
                             body: JSON.stringify(jsonData)
                         });
                     }
-        
-                    if (response.ok) {
+            
+                    // Log the response status and headers for debugging
+                    console.log('Response status:', response?.status);
+                    console.log('Response status text:', response?.statusText);
+                    console.log('Response headers:', response?.headers);
+            
+                    // Check if response is successful
+                    if (response?.ok) {
+                        const data = await response.json();
+                        console.log('Response data:', data); // Log response data
+            
                         alert(id ? 'Alimento atualizado com sucesso!' : 'Alimento registrado com sucesso!');
                         loadAlimentos(); // reload alimentos after successful registration or update
                         e.target.reset(); // clear form
                         delete e.target.dataset.id; // remove stored ID
                     } else {
-                        const errorText = await response.text();
+                        const errorText = await response?.text();
                         alert(`Erro ao ${id ? 'atualizar' : 'registrar'} alimento: ${errorText}`);
                     }
                 } catch (error) {
@@ -305,7 +329,7 @@ document.addEventListener('DOMContentLoaded',async () => {
                     alert('Erro na requisição. Verifique os dados e tente novamente.');
                 }
             });
-            
+                        
 
         } catch (error) {
             console.error('Error loading alimentos:', error);

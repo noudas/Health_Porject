@@ -15,25 +15,17 @@ const Paciente = require('../mongodb/models/paciente');
 
 router.post('/dietas', async (req, res) => {
     try {
-        const requiredFields = ['horarios'];
+        const requiredFields = ['nome', 'descricao', 'horarios'];
         const missingFields = requiredFields.filter(field => !req.body[field]);
 
         if (missingFields.length > 0) {
             return res.status(400).json({ message: 'Missing required fields', missingFields });
         }
 
-        const horarios = req.body.horarios || [];
-
-        // Validate horarios
-        const validHorarios = horarios.map((horario, i) => {
-            if (!horario.tipo || !horario.alimento) {
-                throw new Error(`Invalid horario structure at index ${i}: ${JSON.stringify(horario)}`);
-            }
-            return horario;
-        });
-
         const dieta = new Dieta({
-            horarios: validHorarios,
+            nome: req.body.nome,
+            descricao: req.body.descricao,
+            horarios: req.body.horarios || [],
             rotina: req.body.rotina || ''
         });
 
@@ -45,6 +37,7 @@ router.post('/dietas', async (req, res) => {
     }
 });
 
+
 // GET
 router.get('/dietas', async (req, res) => {
     try {
@@ -55,6 +48,7 @@ router.get('/dietas', async (req, res) => {
         res.status(500).json({ message: 'Error retrieving dietas records', error });
     }
 });
+
 
 router.get('/dietas/:id', async (req, res) => {
     try {
@@ -70,6 +64,7 @@ router.get('/dietas/:id', async (req, res) => {
     }
 });
 
+
 //PUT
 router.put('/dietas/:id', async (req, res) => {
     try {
@@ -82,6 +77,8 @@ router.put('/dietas/:id', async (req, res) => {
         }
 
         // Update fields
+        dieta.nome = req.body.nome || dieta.nome;
+        dieta.descricao = req.body.descricao || dieta.descricao;
         dieta.horarios = req.body.horarios || dieta.horarios;
         dieta.rotina = req.body.rotina || dieta.rotina;
 
@@ -93,6 +90,7 @@ router.put('/dietas/:id', async (req, res) => {
         res.status(400).json({ message: 'Error updating dieta record', error });
     }
 });
+
 
 // DELETE: Delete a Dieta record by ID
 router.delete('/dietas/:id', async (req, res) => {

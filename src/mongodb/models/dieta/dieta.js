@@ -5,6 +5,14 @@ const { model, Schema } = require('mongoose');
 const alimentoSchema = require('./alimento');
 
 const dietaSchema = new Schema({
+    nome:{
+        type: String,
+        maxlength: 500
+    },
+    descricao:{
+        type: String,
+        maxlength: 3000
+    },
     horarios: [{
         tipo: {
             type: String,
