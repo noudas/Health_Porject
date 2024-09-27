@@ -71,11 +71,19 @@ document.addEventListener('DOMContentLoaded',async () => {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><input type="text" name="vitaminas[0][nome]" placeholder="Nome da vitamina"></td>
-                                    <td><input type="number" name="vitaminas[0][quantidade]" placeholder="Quantidade"></td>
-                                    <td><select name="vitaminas[0][unidadeMedida]">
-                                        ${unidadesMedidaEnum.map(unidade => `<option value="${unidade}">${unidade}</option>`).join('')}
-                                    </select></td>
+                                    <td> 
+                                        <select name="vitaminas[0][nome]">
+                                            ${vitaminasEnum.map(vitamina => `<option value="${vitamina}">${vitamina}</option>`).join('')}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="vitaminas[0][quantidade]" placeholder="Quantidade">
+                                    </td>
+                                    <td>
+                                        <select name="vitaminas[0][unidadeMedida]">
+                                            ${unidadesMedidaEnum.map(unidade => `<option value="${unidade}">${unidade}</option>`).join('')}
+                                        </select>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -94,11 +102,19 @@ document.addEventListener('DOMContentLoaded',async () => {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><input type="text" name="minerais[0][nome]" placeholder="Nome do mineral"></td>
-                                    <td><input type="number" name="minerais[0][quantidade]" placeholder="Quantidade"></td>
-                                    <td><select name="minerais[0][unidadeMedida]">
-                                        ${unidadesMedidaEnum.map(unidade => `<option value="${unidade}">${unidade}</option>`).join('')}
-                                    </select></td>
+                                    <td>
+                                        <select name="minerais[0][nome]">
+                                            ${mineraisEnum.map(mineral => `<option value="${mineral}">${mineral}</option>`).join('')}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="minerais[0][quantidade]" placeholder="Quantidade">
+                                    </td>
+                                    <td>
+                                        <select name="minerais[0][unidadeMedida]">
+                                            ${unidadesMedidaEnum.map(unidade => `<option value="${unidade}">${unidade}</option>`).join('')}
+                                        </select>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -131,24 +147,36 @@ document.addEventListener('DOMContentLoaded',async () => {
                 const tableBody = document.getElementById('vitaminasTable').querySelector('tbody');
                 const newRow = tableBody.insertRow(tableBody.rows.length);
                 newRow.innerHTML = `
-                    <td><input type="text" name="vitaminas[${tableBody.rows.length - 1}][nome]" placeholder="Nome da vitamina"></td>
+                    <td>
+                        <select name="vitaminas[${tableBody.rows.length - 1}][tipo]">
+                            ${vitaminasEnum.map(vitamina => `<option value="${vitamina}">${vitamina}</option>`).join('')}
+                        </select>
+                    </td>
                     <td><input type="number" name="vitaminas[${tableBody.rows.length - 1}][quantidade]" placeholder="Quantidade"></td>
-                    <td><select name="vitaminas[${tableBody.rows.length - 1}][unidadeMedida]">
-                        ${unidadesMedidaEnum.map(unidade => `<option value="${unidade}">${unidade}</option>`).join('')}
-                    </select></td>
+                    <td>
+                        <select name="vitaminas[${tableBody.rows.length - 1}][unidadeMedida]">
+                            ${unidadesMedidaEnum.map(unidade => `<option value="${unidade}">${unidade}</option>`).join('')}
+                        </select>
+                    </td>
                 `;
             };
-        
+
             // Function to add more rows for minerals
             window.addMineralRow = function addMineralRow() {
                 const tableBody = document.getElementById('mineraisTable').querySelector('tbody');
                 const newRow = tableBody.insertRow(tableBody.rows.length);
                 newRow.innerHTML = `
-                    <td><input type="text" name="minerais[${tableBody.rows.length - 1}][nome]" placeholder="Nome do mineral"></td>
+                    <td>
+                        <select name="minerais[${tableBody.rows.length - 1}][tipo]">
+                            ${mineraisEnum.map(mineral => `<option value="${mineral}">${mineral}</option>`).join('')}
+                        </select>
+                    </td>
                     <td><input type="number" name="minerais[${tableBody.rows.length - 1}][quantidade]" placeholder="Quantidade"></td>
-                    <td><select name="minerais[${tableBody.rows.length - 1}][unidadeMedida]">
-                        ${unidadesMedidaEnum.map(unidade => `<option value="${unidade}">${unidade}</option>`).join('')}
-                    </select></td>
+                    <td>
+                        <select name="minerais[${tableBody.rows.length - 1}][unidadeMedida]">
+                            ${unidadesMedidaEnum.map(unidade => `<option value="${unidade}">${unidade}</option>`).join('')}
+                        </select>
+                    </td>
                 `;
             };
 

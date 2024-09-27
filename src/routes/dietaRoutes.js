@@ -13,21 +13,19 @@ const Paciente = require('../mongodb/models/paciente');
 
 
 
-// POST: Create a new Dieta record
 router.post('/dietas', async (req, res) => {
     try {
-        const requiredFields = ['paciente'];
+        const requiredFields = ['horarios'];
         const missingFields = requiredFields.filter(field => !req.body[field]);
 
         if (missingFields.length > 0) {
             return res.status(400).json({ message: 'Missing required fields', missingFields });
         }
 
-        const pacienteId = req.body.paciente;
         const horarios = req.body.horarios || [];
 
         // Validate horarios
-        const validHorarios = horarios.map(horario => {
+        const validHorarios = horarios.map((horario, i) => {
             if (!horario.tipo || !horario.alimento) {
                 throw new Error(`Invalid horario structure at index ${i}: ${JSON.stringify(horario)}`);
             }
@@ -35,7 +33,6 @@ router.post('/dietas', async (req, res) => {
         });
 
         const dieta = new Dieta({
-            paciente: pacienteId,
             horarios: validHorarios,
             rotina: req.body.rotina || ''
         });
@@ -48,11 +45,10 @@ router.post('/dietas', async (req, res) => {
     }
 });
 
-
-// GET: Retrieve all Dieta records
+// GET
 router.get('/dietas', async (req, res) => {
     try {
-        const dietas = await Dieta.find().populate('paciente').populate('horarios.alimento');
+        const dietas = await Dieta.find().populate('horarios.alimento');
         res.status(200).json(dietas);
     } catch (error) {
         console.error('Error retrieving dietas records:', error);
@@ -60,11 +56,10 @@ router.get('/dietas', async (req, res) => {
     }
 });
 
-// GET: Retrieve a specific Dieta record by ID
 router.get('/dietas/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const dieta = await Dieta.findById(id).populate('paciente').populate('horarios.alimento');
+        const dieta = await Dieta.findById(id).populate('horarios.alimento');
         if (!dieta) {
             return res.status(404).json({ message: 'Dieta record not found' });
         }
@@ -75,7 +70,7 @@ router.get('/dietas/:id', async (req, res) => {
     }
 });
 
-// PUT: Update an existing Dieta record
+//PUT
 router.put('/dietas/:id', async (req, res) => {
     try {
         const id = req.params.id;
@@ -87,7 +82,6 @@ router.put('/dietas/:id', async (req, res) => {
         }
 
         // Update fields
-        dieta.paciente = req.body.paciente || dieta.paciente;
         dieta.horarios = req.body.horarios || dieta.horarios;
         dieta.rotina = req.body.rotina || dieta.rotina;
 
@@ -115,29 +109,21 @@ router.delete('/dietas/:id', async (req, res) => {
     }
 });
 
-// POST: Create a new Horario record
 router.post('/horarios', async (req, res) => {
     try {
-        const { paciente, hora, tipo, alimento, observacoes } = req.body;
+        const { hora, tipo, alimento, observacoes } = req.body;
 
         // Validate required fields
-        if (!paciente || !hora || !tipo) {
-            return res.status(400).json({ message: 'Missing required fields: paciente, hora, and tipo are required.' });
+        if (!hora || !tipo) {
+            return res.status(400).json({ message: 'Missing required fields: hora and tipo are required.' });
         }
 
-        // Validate if paciente and alimento IDs are valid ObjectIds
-        if (!mongoose.Types.ObjectId.isValid(paciente)) {
-            return res.status(400).json({ message: 'Invalid paciente ID' });
-        }
+        // Validate if alimento ID is valid ObjectId
         if (alimento && !mongoose.Types.ObjectId.isValid(alimento)) {
             return res.status(400).json({ message: 'Invalid alimento ID' });
         }
 
-        // Check if paciente and alimento exist
-        const pacienteExists = await Paciente.findById(paciente);
-        if (!pacienteExists) {
-            return res.status(404).json({ message: 'Paciente not found' });
-        }
+        // Check if alimento exists
         if (alimento) {
             const alimentoExists = await Alimento.findById(alimento);
             if (!alimentoExists) {
@@ -146,7 +132,6 @@ router.post('/horarios', async (req, res) => {
         }
 
         const horario = new Horario({
-            paciente,
             hora,
             tipo,
             alimento,
@@ -171,13 +156,34 @@ router.post('/horarios', async (req, res) => {
 
 
 
+router.post('/horarios', async (req, res) => {
+    try {
+        const { hora, tipo, observacoes } = req.body;
 
+        // Validate required fields
+        if (!hora || !tipo) {
+            return res.status(400).json({ message: 'Missing required fields: hora and tipo are required.' });
+        }
+
+        const horario = new Horario({
+            hora,
+            tipo,
+            observacoes
+        });
+
+        await horario.save();
+        res.status(201).json({ message: 'Horario record created successfully', horario });
+    } catch (error) {
+        console.error('Error creating horario record:', error);
+        res.status(400).json({ message: 'Error creating horario record', errorMessage: error.message });
+    }
+});
 
 
 // GET: Retrieve all Horarios records
 router.get('/horarios', async (req, res) => {
     try {
-        const horarios = await Horario.find().populate('paciente').populate('alimento');
+        const horarios = await Horario.find();
         res.status(200).json(horarios);
     } catch (error) {
         console.error('Error retrieving horarios records:', error);
@@ -189,7 +195,7 @@ router.get('/horarios', async (req, res) => {
 router.get('/horarios/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const horario = await Horario.findById(id).populate('paciente').populate('alimento');
+        const horario = await Horario.findById(id);
         if (!horario) {
             return res.status(404).json({ message: 'Horario record not found' });
         }
@@ -212,10 +218,8 @@ router.put('/horarios/:id', async (req, res) => {
         }
 
         // Update fields
-        horario.paciente = req.body.paciente || horario.paciente;
         horario.hora = req.body.hora || horario.hora;
         horario.tipo = req.body.tipo || horario.tipo;
-        horario.alimento = req.body.alimento || horario.alimento;
         horario.observacoes = req.body.observacoes || horario.observacoes;
 
         // Save the changes
