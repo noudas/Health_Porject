@@ -17,7 +17,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ../src:/app/src:ro
-      - ../client:/app/client:rw
+      - ../src/public/client:/app/public/client:rw
     ports:
       - 3000:3000
     command: npm run dev
