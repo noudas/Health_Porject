@@ -15,6 +15,9 @@ COPY src src
 
 # Rodar com Nodemon
 FROM build as dev
+
+# Instalar o React
+RUN npm install --save-dev react react-dom @babel/core babel-loader @babel/preset-env @babel/preset-react webpack webpack-cli webpack-dev-server css-loader style-loader html-webpack-plugin
 CMD ["npm","run","dev"]
 
 # Rodar com Node
