@@ -11,6 +11,17 @@ services:
     env_file:
       - ../env/backend.env
 
+  react-dev:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    volumes:
+      - ../src:/app/src:ro
+      - ../client:/app/client:rw
+    ports:
+      - 3000:3000
+    command: npm run dev
+
   mongodb-dev:
     image: "mongo"
     ports:
@@ -21,6 +32,7 @@ services:
     env_file:
       - ../env/mongodb.env
     
+
 
 volumes:
   data-dev:
