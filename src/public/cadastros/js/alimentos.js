@@ -229,6 +229,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         loadAlimentos(); // reload alimentos after delete
                     } else {
                         alert('Erro ao deletar alimento.');
+                        loadAlimentos(); // reload alimentos after delete
                     }
                 }
             };
