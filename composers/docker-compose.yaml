@@ -1,38 +1,55 @@
+version: '3.8'
+
 services:
   node-app:
-    volumes:
-      - ../src:/app/src:ro
-    ports:
-      - 5000:5000
     build:
       context: ../
       dockerfile: Dockerfile
       target: dev
+    volumes:
+      - ../src:/app/src:ro # Montar o diretório src como read-only no container
+      - /app/node_modules # Montar o diretório de dependências para evitar conflitos
+    ports:
+      - 5000:5000
     env_file:
       - ../env/backend.env
+    depends_on:
+      - mongodb-dev
+    networks:
+      - backend
 
   react-dev:
     build:
-      context: ../
+      context: ..
       dockerfile: Dockerfile
+      target: react-dev
     volumes:
-      - ../src:/app/src:ro
-      - ../src/public/client:/app/public/client:rw
+      - ../src:/app/src:rw # Montar o diretório src como read-write no container para desenvolvimento do React
+      - ../frontend:/app/frontend # Montar a pasta frontend separadamente para React
+      - /app/node_modules
     ports:
       - 3000:3000
-    command: npm run dev
+    command: npm start
+    networks:
+      - frontend
+    depends_on:
+      - node-app
 
   mongodb-dev:
     image: "mongo"
+    container_name: mongodb-dev
     ports:
       - 27017:27017
     volumes:
       - data-dev:/data/db:rw
-    container_name: mongodb-dev
     env_file:
       - ../env/mongodb.env
-    
-
+    networks:
+      - backend
 
 volumes:
   data-dev:
+
+networks:
+  backend:
+  frontend:
