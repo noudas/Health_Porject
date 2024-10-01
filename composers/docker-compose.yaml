@@ -3,12 +3,12 @@ version: '3.8'
 services:
   node-app:
     build:
-      context: ../
+      context: ..
       dockerfile: Dockerfile
       target: dev
     volumes:
-      - ../src:/app/src:ro # Montar o diretório src como read-only no container
-      - /app/node_modules # Montar o diretório de dependências para evitar conflitos
+      - ../src:/app/src:rw  # Mount src as read-write for backend development
+      - /app/node_modules   # Use container's node_modules to avoid conflicts
     ports:
       - 5000:5000
     env_file:
@@ -24,8 +24,8 @@ services:
       dockerfile: Dockerfile
       target: react-dev
     volumes:
-      - ../src:/app/src:rw # Montar o diretório src como read-write no container para desenvolvimento do React
-      - ../frontend:/app/frontend # Montar a pasta frontend separadamente para React
+      - ../src:/app/src:rw                # Mount src as read-write for React development
+      - ../src/public/frontend:/app/src/public/frontend:rw  # Mount frontend folder
       - /app/node_modules
     ports:
       - 3000:3000

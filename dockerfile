@@ -1,37 +1,33 @@
-# Etapa de build base para instalar dependências e preparar o ambiente
+# Stage 1: Build base for installing dependencies and preparing the environment
 FROM node:lts as build
 
-# Definir o diretório de trabalho como /app
+# Set working directory to /app
 WORKDIR /app
 
-# Copiar arquivos de dependências e instalar
+# Copy dependency files and install
 COPY package.json package-lock.json ./
 RUN npm install
 
-# Copiar o código-fonte do backend
-COPY ./src ./src
+# Copy the entire project directory (only once) to ensure both frontend and backend are available
+COPY . .
 
-# Etapa de desenvolvimento para o backend
+# Stage 2: Backend development
 FROM build as dev
 
-# Instalar ferramentas adicionais para desenvolvimento (como Nodemon)
+# Install additional tools for backend development (like Nodemon)
 RUN npm install --save-dev nodemon
 CMD ["npx", "nodemon", "src/index.js"]
 
-# Etapa para React no ambiente de desenvolvimento
+# Stage 3: React development environment
 FROM build as react-dev
 
-# Instalar as dependências do React
-RUN npm install --save react react-dom @babel/core babel-loader @babel/preset-env @babel/preset-react webpack webpack-cli webpack-dev-server css-loader style-loader html-webpack-plugin
-
-# Iniciar o servidor de desenvolvimento do React
-WORKDIR /app/frontend
-COPY ./frontend/package.json ./frontend/
+# Set working directory to /app/frontend (inside the copied directory)
+WORKDIR /app/src/public/frontend
 RUN npm install
 CMD ["npm", "start"]
 
-# Etapa de produção para o backend
+# Stage 4: Production for backend
 FROM build as prod
 
-# Executar o backend em modo de produção
+# Run the backend in production mode
 CMD ["node", "src/index.js"]
