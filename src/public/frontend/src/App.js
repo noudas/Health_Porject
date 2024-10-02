@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import './styles.css';
-import Suplementos from './components/Suplementos';
-import Alergias from './components/Alergias';
-import Esportes from './components/Esportes';
-import Medicamentos from './components/Medicamentos';
-import Dietas from './components/Dietas';
-import Alimentos from './components/Alimentos';
-import Horarios from './components/Horarios';
+import Suplementos from './components/Suplementos/Suplemento';
+import Alergias from './components/Alergias/Alergias';
+import Esportes from './components/Esportes/Esportes';
+import Medicamentos from './components/Medicamentos/Medicamentos';
+import Dietas from './components/Dietas/Dietas';
+import Alimentos from './components/Alimentos/Alimentos';
+import Horarios from './components/Horarios/Horarios';
 
 function App() {
   const [selectedType, setSelectedType] = useState('suplementos');
@@ -14,8 +14,8 @@ function App() {
   const renderComponent = () => {
     switch (selectedType) {
       case 'suplementos':
-        return <Suplementos />;
-      case 'alergias':
+        return <Suplementos />;    
+      case 'alergias':      
         return <Alergias />;
       case 'esportes':
         return <Esportes />;
