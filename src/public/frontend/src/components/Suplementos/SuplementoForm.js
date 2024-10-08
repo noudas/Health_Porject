@@ -4,6 +4,7 @@ function SuplementoForm({ adicionarOuEditarSuplemento }) {
   const [formData, setFormData] = useState({
     nome: '',
     dosagem: '',
+    descricao: '',
     tipo: '',
     forma: ''
   });
@@ -21,6 +22,7 @@ function SuplementoForm({ adicionarOuEditarSuplemento }) {
     adicionarOuEditarSuplemento(formData);
     setFormData({
       nome: '',
+      descricao: '',
       dosagem: '',
       tipo: '',
       forma: ''
@@ -36,6 +38,10 @@ function SuplementoForm({ adicionarOuEditarSuplemento }) {
       <div className="field-group">
         <label htmlFor="dosagem">Dosagem:</label>
         <input type="text" id="dosagem" value={formData.dosagem} onChange={handleInputChange} required />
+      </div>
+      <div className="field-group">
+        <label htmlFor="descricao">Descricao:</label>
+        <input type="text" id="descricao" value={formData.descricao} onChange={handleInputChange} required />
       </div>
       <div className="field-group">
         <label htmlFor="tipo">Tipo:</label>
