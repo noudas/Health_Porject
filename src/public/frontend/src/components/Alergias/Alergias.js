@@ -4,10 +4,8 @@ import AlergiaForm from './AlergiaForm';
 import AlergiaTable from './AlergiaTable';
 import { API_BASE_URL } from '../../config';
 
-
 function Alergias() {
   const [alergias, setAlergias] = useState([]);
-  
 
   // Carregar alergias ao montar o componente
   useEffect(() => {
@@ -17,16 +15,10 @@ function Alergias() {
   // Função para carregar alergias da API
   const loadAlergias = async () => {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/alergias`);
+      const response = await fetch(`${API_BASE_URL}/api/alergias`);
 
-      // Verifica se o conteúdo é JSON e a resposta é ok
       if (!response.ok) {
         throw new Error(`Erro ao carregar: ${response.status}`);
-      }
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Resposta não é JSON.');
       }
 
       const data = await response.json(); // Converte para JSON
@@ -57,10 +49,10 @@ function Alergias() {
     }
   };
 
-  // Função para editar uma alergia existente
-  const editarAlergia = async (id, novosDados) => {
+  // Função para atualizar alergia editada
+  const atualizarAlergia = async (id, novosDados) => {
     try {
-     const response = await fetch(`${API_BASE_URL}/api/alergias/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/alergias/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(novosDados),
@@ -80,7 +72,7 @@ function Alergias() {
   // Função para deletar uma alergia
   const deletarAlergia = async (id) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/alergias/${id}`, { method: 'DELETE' });
+      const response = await fetch(`${API_BASE_URL}/api/alergias/${id}`, { method: 'DELETE' });
       if (response.ok) {
         alert('Alergia deletada com sucesso!');
         loadAlergias();
@@ -95,11 +87,13 @@ function Alergias() {
   return (
     <div>
       <h2>Registrar Nova Alergia</h2>
-      <AlergiaForm adicionarAlergia={adicionarAlergia} />
+      <AlergiaForm 
+        adicionarAlergia={adicionarAlergia} 
+      />
       <h2>Lista de Alergias</h2>
       <AlergiaTable
         alergias={alergias}
-        editarAlergia={editarAlergia}
+        atualizarAlergia={atualizarAlergia}
         deletarAlergia={deletarAlergia}
       />
     </div>

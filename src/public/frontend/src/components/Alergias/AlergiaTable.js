@@ -2,7 +2,7 @@
 import React from 'react';
 import AlergiaRow from './AlergiaRow';
 
-function AlergiaTable({ alergias, editarAlergia, deletarAlergia }) {
+function AlergiaTable({ alergias, atualizarAlergia, deletarAlergia }) {
   return (
     <table>
       <thead>
@@ -10,6 +10,7 @@ function AlergiaTable({ alergias, editarAlergia, deletarAlergia }) {
           <th>Nome</th>
           <th>Tipo</th>
           <th>Severidade</th>
+          <th>Descrição</th>
           <th>Ações</th>
         </tr>
       </thead>
@@ -18,7 +19,7 @@ function AlergiaTable({ alergias, editarAlergia, deletarAlergia }) {
           <AlergiaRow
             key={alergia._id}
             alergia={alergia}
-            editarAlergia={editarAlergia}
+            atualizarAlergia={atualizarAlergia}
             deletarAlergia={deletarAlergia}
           />
         ))}
