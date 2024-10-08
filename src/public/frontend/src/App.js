@@ -9,6 +9,7 @@ import Alimentos from './components/Alimentos/Alimentos';
 import Horarios from './components/Horarios/Horarios';
 import Sintomas from './components/Sintomas/Sintomas';
 import Doencas from './components/Doencas/Doencas';
+import Pacientes from './components/Pacientes/Pacientes';
 
 function App() {
   const [selectedType, setSelectedType] = useState('suplementos');
@@ -31,8 +32,10 @@ function App() {
         return <Horarios />;
       case 'sintomas':
         return <Sintomas />;
-        case 'doencas':
-          return <Doencas />;
+      case 'doencas':
+        return <Doencas />;
+      case 'pacientes':
+        return <Pacientes />;
       default:
         return <p>Por favor, selecione um tipo de registro.</p>;
     }
@@ -51,6 +54,7 @@ function App() {
         <option value="dietas">Dietas</option>
         <option value="sintomas">Sintomas</option>
         <option value="doencas">Doencas</option>
+        <option value="pacientes">Pacientes</option>
       </select>
       <div id="registroContent">
         {renderComponent()}
