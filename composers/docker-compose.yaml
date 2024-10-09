@@ -1,14 +1,11 @@
-version: '3.8'
-
 services:
   node-app:
     build:
       context: ..
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.backend
       target: dev
     volumes:
       - ../src:/app/src:rw  # Mount src as read-write for backend development
-      - /app/node_modules   # Use container's node_modules to avoid conflicts
     ports:
       - 5000:5000
     env_file:
@@ -21,15 +18,12 @@ services:
   react-dev:
     build:
       context: ..
-      dockerfile: Dockerfile
-      target: react-dev
+      dockerfile: Dockerfile.react
     volumes:
       - ../src:/app/src:rw                # Mount src as read-write for React development
       - ../src/public/frontend:/app/src/public/frontend:rw  # Mount frontend folder
-      - /app/node_modules
     ports:
       - 3000:3000
-    command: npm start
     networks:
       - frontend
     depends_on:

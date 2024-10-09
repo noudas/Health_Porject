@@ -1,0 +1,15 @@
+# Stage 1: Build base for React development
+FROM node:lts as build
+
+# Set working directory to /app/src/public/frontend
+WORKDIR /app/src/public/frontend
+
+# Copy dependency files and install
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Install additional dependencies
+RUN npm install -D webpack-cli
+RUN npm install -g socket.io-client
+
+CMD ["npm", "start"]

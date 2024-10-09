@@ -1,0 +1,21 @@
+# Stage 1: Build base for installing dependencies and preparing the environment
+FROM node:lts as build
+
+# Set working directory to /app
+WORKDIR /app
+
+# Copy dependency files and install
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Copy the entire project directory to ensure both frontend and backend are available
+COPY . .
+
+# Stage 2: Backend development
+FROM build as dev
+
+# Install additional tools for backend development (like Nodemon)
+RUN npm install --save-dev nodemon
+RUN npm install -g socket.io
+
+CMD ["npx", "nodemon", "--watch", "src", "--watch", "src/public/frontend", "src/public/frontend/index.js"]
