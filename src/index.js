@@ -1,4 +1,3 @@
-// index.js (Back-End)
 const express = require("express");
 const http = require("http");
 const path = require("path");
@@ -14,15 +13,21 @@ const app = express();
 const server = http.createServer(app); // Cria o servidor HTTP com suporte ao WebSocket
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000', // Permite conexões do front-end React
+    origin: ['http://localhost:3000', 'http://react-dev:3000', 'http://node-app:5000'],
+    methods: ['GET', 'POST'],
+    credentials: true,
   },
 });
+
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public/cadastros')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://react-dev:3000'],
+  credentials: true, // Permite enviar cookies junto com as requisições
+}));
 
 // Import Routes
 const pacienteRoutes = require('./routes/pacienteRoutes');
@@ -81,18 +86,11 @@ io.on('connection', (socket) => {
   // Enviar dados iniciais quando o cliente se conecta
   socket.on('join', (selectedType) => {
     console.log(`Cliente entrou na sala: ${selectedType}`);
-    // Supondo que você tenha dados específicos para cada tipo
-    // Enviar dados iniciais para o tipo selecionado
-    // socket.emit(selectedType, seusDados[selectedType]); 
   });
 
   // Escutar eventos de atualização de dados do cliente
   socket.on('updateData', ({ type, newData }) => {
     console.log(`Atualizando dados para o tipo: ${type}`);
-    // Atualize seus dados conforme necessário
-    // Seus dados, como um banco de dados ou uma estrutura de dados em memória
-
-    // Emite os dados atualizados para todos os clientes
     io.emit(type, newData);
   });
 
@@ -103,7 +101,7 @@ io.on('connection', (socket) => {
 });
 
 // Inicializar o servidor na porta configurada
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Servidor WebSocket rodando em http://localhost:${PORT}`);
 });

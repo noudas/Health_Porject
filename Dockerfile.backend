@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy the entire project directory to ensure both frontend and backend are available
+# Copy the entire project directory (only once) to ensure both frontend and backend are available
 COPY . .
 
 # Stage 2: Backend development
@@ -17,5 +17,10 @@ FROM build as dev
 # Install additional tools for backend development (like Nodemon)
 RUN npm install --save-dev nodemon
 RUN npm install -g socket.io
+CMD ["npx", "nodemon", "--watch", "src", "src/public/frontend/index.js"]
 
-CMD ["npx", "nodemon", "--watch", "src", "--watch", "src/public/frontend", "src/public/frontend/index.js"]
+# Stage 4: Production for backend
+FROM build as prod
+
+# Run the backend in production mode
+CMD ["node", "src/index.js"]

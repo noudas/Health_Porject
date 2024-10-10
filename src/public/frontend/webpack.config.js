@@ -17,11 +17,20 @@ module.exports = {
   devtool: isDevelopment ? 'eval-source-map' : 'source-map',
   devServer: {
     static: path.join(__dirname, 'src'),
-    hot: true, // Habilita o Hot Module Replacement (HMR)
+    hot: true,
     port: 3000,
     open: true,
     historyApiFallback: true,
-  },
+    host: '0.0.0.0',  // Adicione esta linha para expor para conexões externas
+    client: {
+      webSocketURL: {
+        hostname: 'localhost', // Nome do host do WebSocket (pode ser 'react-dev' no Docker Compose)
+        pathname: '/ws',
+        port: 3000,
+        protocol: 'ws',
+      },
+    },
+  },  
   resolve: {
     extensions: ['.js', '.jsx'],
   },
@@ -58,4 +67,10 @@ module.exports = {
         }
       })
     ].filter(Boolean),
+
+    watchOptions: {
+      poll: 1000, // Verificar alterações nos arquivos a cada segundo
+      ignored: /node_modules/, // Ignorar node_modules para evitar lentidão
+    },
+    
 };

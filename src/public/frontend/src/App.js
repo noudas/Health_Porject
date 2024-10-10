@@ -71,7 +71,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Gestão de Registros</h1>
+      <h1>Gestão de Registros</h1> 
       <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
         <option value="suplementos">Suplementos</option>
         <option value="alergias">Alergias</option>

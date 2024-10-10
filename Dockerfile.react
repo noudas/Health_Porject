@@ -1,15 +1,22 @@
-# Stage 1: Build base for React development
+# Dockerfile.react
+
+# Base build
 FROM node:lts as build
 
-# Set working directory to /app/src/public/frontend
-WORKDIR /app/src/public/frontend
+WORKDIR /app
 
-# Copy dependency files and install
 COPY package.json package-lock.json ./
 RUN npm install
 
-# Install additional dependencies
-RUN npm install -D webpack-cli
-RUN npm install -g socket.io-client
+COPY . .
 
-CMD ["npm", "start"]
+# Development environment
+FROM build as react-dev
+
+WORKDIR /app/src/public/frontend
+
+# Exponha a porta 3000 para o frontend
+EXPOSE 3000
+
+# Inicie o servidor em desenvolvimento
+CMD ["npm", "start", "--", "--host", "0.0.0.0"]

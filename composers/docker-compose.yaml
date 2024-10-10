@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   node-app:
     build:
@@ -6,6 +7,8 @@ services:
       target: dev
     volumes:
       - ../src:/app/src:rw  # Mount src as read-write for backend development
+      - ../src/public/frontend:/app/src/public/frontend:rw  # Mount frontend folder for shared access
+      - /app/node_modules  # Ignora node_modules do host
     ports:
       - 5000:5000
     env_file:
@@ -14,6 +17,7 @@ services:
       - mongodb-dev
     networks:
       - backend
+      - frontend-backend
 
   react-dev:
     build:
@@ -22,12 +26,17 @@ services:
     volumes:
       - ../src:/app/src:rw                # Mount src as read-write for React development
       - ../src/public/frontend:/app/src/public/frontend:rw  # Mount frontend folder
+      - /app/node_modules  # Ignora node_modules do host
     ports:
       - 3000:3000
     networks:
       - frontend
+      - frontend-backend
     depends_on:
       - node-app
+    environment:
+      - NODE_ENV=development
+
 
   mongodb-dev:
     image: "mongo"
@@ -47,3 +56,5 @@ volumes:
 networks:
   backend:
   frontend:
+  frontend-backend:
+    driver: bridge
