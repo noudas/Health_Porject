@@ -9,7 +9,7 @@ const Posologia = require('../mongodb/models/medicamento/posologia');
 // POST: Create a new Medicamento record
 router.post('/medicamentos', async (req, res) => {
     try {
-        const requiredFields = ['paciente', 'detalhes', 'posologia'];
+        const requiredFields = ['detalhes', 'posologia'];
         const missingFields = requiredFields.filter(field => !req.body[field]);
 
         if (missingFields.length > 0) {
@@ -17,7 +17,6 @@ router.post('/medicamentos', async (req, res) => {
         }
 
         const medicamento = new Medicamento({
-            paciente: req.body.paciente,
             detalhes: {
                 nome: req.body.detalhes.nome,
                 marca: req.body.detalhes.marca,
@@ -51,7 +50,6 @@ router.post('/medicamentos', async (req, res) => {
 router.get('/medicamentos', async (req, res) => {
     try {
         const medicamentos = await Medicamento.find()
-            .populate('paciente')
             .select('-__v -createdAt -updatedAt');
         res.status(200).json(medicamentos);
     } catch (error) {
@@ -65,7 +63,6 @@ router.get('/medicamentos/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const medicamento = await Medicamento.findById(id)
-            .populate('paciente')
             .select('-__v -createdAt -updatedAt');
         if (!medicamento) {
             return res.status(404).json({ message: 'Medicamento record not found' });
@@ -89,7 +86,6 @@ router.put('/medicamentos/:id', async (req, res) => {
         }
 
         // Update fields
-        medicamento.paciente = req.body.paciente || medicamento.paciente;
         medicamento.detalhes = {
             nome: req.body.detalhes.nome || medicamento.detalhes.nome,
             marca: req.body.detalhes.marca || medicamento.detalhes.marca,

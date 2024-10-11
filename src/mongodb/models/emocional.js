@@ -3,11 +3,6 @@
 const { model, Schema } = require('mongoose');
 
 const emocionalSchema = new Schema({
-    paciente: {
-        type: Schema.Types.ObjectId,
-        ref: 'Paciente',
-        required: true
-    },
     descricao: {
         type: String,
         required: true

@@ -9,25 +9,18 @@ const { isEmpty } = require('../utils/objUtils');
 // POST: Create a new Emocional record
 router.post('/emocionals', async (req, res) => {
     try {
-        const { paciente, descricao, espectro } = req.body; // Destructuring req.body
+        const { descricao, espectro } = req.body; // Destructuring req.body
 
         // Validate required fields
-        const requiredFields = ['paciente', 'descricao', 'espectro'];
+        const requiredFields = ['descricao', 'espectro'];
         const missingFields = requiredFields.filter(field => isEmpty(req.body[field]));
 
         if (missingFields.length > 0) {
             return res.status(400).json({ message: 'Missing required fields', missingFields });
         }
 
-        // Validate paciente existence
-        const foundPaciente = await Paciente.findById(paciente);
-        if (!foundPaciente) {
-            return res.status(404).json({ message: 'Paciente not found' });
-        }
-
         // Create a new Emocional record
         const emocional = new Emocional({
-            paciente: foundPaciente._id,
             descricao,
             espectro
         });

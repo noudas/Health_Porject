@@ -10,16 +10,6 @@ export const fetchMedicamentos = async (url) => {
     }
   };
   
-  export const fetchPacientes = async (url) => {
-    try {
-      const response = await fetch(url);
-      return response.ok ? await response.json() : [];
-    } catch (error) {
-      console.error('Error fetching pacientes:', error);
-      return [];
-    }
-  };
-  
   export const createOrUpdateMedicamento = async (url, medicamento) => {
     try {
       const response = await fetch(url, {

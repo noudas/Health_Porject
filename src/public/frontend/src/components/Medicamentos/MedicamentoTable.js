@@ -7,7 +7,6 @@ function MedicamentoTable({ medicamentos, editarMedicamento, deletarMedicamento 
     <table>
       <thead>
         <tr>
-          <th>Paciente</th>
           <th>Nome do Medicamento</th>
           <th>Tipo de Posologia</th>
           <th>Duração do Efeito</th>
@@ -17,7 +16,6 @@ function MedicamentoTable({ medicamentos, editarMedicamento, deletarMedicamento 
       <tbody>
         {medicamentos.map((medicamento) => (
           <tr key={medicamento._id}>
-            <td>{medicamento.paciente.Nome}</td>
             <td>{medicamento.detalhes.nome}</td>
             <td>{medicamento.posologia.tipo}</td>
             <td>{medicamento.duracaoEfeito}</td>

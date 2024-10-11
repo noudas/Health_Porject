@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 
-function MedicamentoForm({ adicionarOuEditarMedicamento, pacientes, medicamento }) {
+function MedicamentoForm({ adicionarOuEditarMedicamento, medicamento }) {
   const [formData, setFormData] = useState({
-    paciente: '',
     detalhes: { nome: '', marca: '', composicao: '', dosagem: '' },
     posologia: { tipo: '', frequencia: '', quantidade: '', unidade: '', duracao: '', instrucoesEspeciais: '' },
     duracaoEfeito: '',
@@ -25,7 +24,6 @@ function MedicamentoForm({ adicionarOuEditarMedicamento, pacientes, medicamento 
 
   const resetForm = () => {
     setFormData({
-      paciente: '',
       detalhes: { nome: '', marca: '', composicao: '', dosagem: '' },
       posologia: { tipo: '', frequencia: '', quantidade: '', unidade: '', duracao: '', instrucoesEspeciais: '' },
       duracaoEfeito: '',
@@ -49,17 +47,6 @@ function MedicamentoForm({ adicionarOuEditarMedicamento, pacientes, medicamento 
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="field-group">
-        <label htmlFor="paciente">Paciente:</label>
-        <select id="paciente" value={formData.paciente} onChange={handleInputChange} required>
-          <option value="" disabled>Selecione um Paciente</option>
-          {pacientes.map((paciente) => (
-            <option key={paciente._id} value={paciente._id}>
-              {paciente.Nome}
-            </option>
-          ))}
-        </select>
-      </div>
       <div className="field-group">
         <label htmlFor="nome">Nome do Medicamento:</label>
         <input type="text" id="nome" value={formData.detalhes.nome} onChange={handleInputChange} required />

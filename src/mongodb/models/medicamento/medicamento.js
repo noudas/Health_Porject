@@ -5,11 +5,6 @@ const detalheSchema = require('./detalhe');
 const posologiaSchema = require('./posologia');
 
 const medicamentoSchema = new Schema({
-    paciente: {
-        type: Schema.Types.ObjectId,
-        ref: 'Paciente',
-        required: true
-    },
     detalhes: detalheSchema,
     posologia: posologiaSchema,
     duracaoEfeito: {
