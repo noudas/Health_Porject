@@ -95,6 +95,44 @@ const pacienteSchema = new Schema({
         default: Date.now
     },
 
+    // Campos relacionados ao fumo
+    fuma: { 
+        type: Boolean, 
+        default: false },
+
+    tipoFumante: { 
+        type: String, 
+        enum: ['ativo', 'passivo', 'ocasional'] 
+    },
+    vezesPorSemanaFumo: 
+    { type: Number, 
+        min: 0, 
+        max: 999 
+    },
+
+    cigarrosPorDia: 
+    { type: Number, 
+        min: 0, 
+        max: 999 
+    },
+
+    // Campos relacionados a bebidas
+    bebe: { 
+        type: Boolean, 
+        default: false 
+    },
+
+    tipoBebida: { 
+        type: String, 
+        enum: ['leve', 'social', 'moderado', 'grave', 'alcoolismo'] 
+    },
+
+    vezesPorSemanaBebida: { 
+        type: Number, 
+        min: 0, 
+        max: 999.99 
+    },
+
     alergias: [{ 
         type: Schema.Types.ObjectId, 
         ref: 'Alergia' 

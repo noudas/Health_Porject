@@ -5,38 +5,29 @@ const Paciente = require('../mongodb/models/paciente');
 // POST: Create a new Paciente
 router.post('/pacientes', async (req, res) => {
     try {
-        
-        const { CPF, Telefone, Celular, Nome, Sexo, Email, Altura, Peso, CircunferenciaAbdominal, HorarioAcordar, Hidratacao, Sono, Intestino, DataNascimento, alergias, emocionais, esportes, suplementos, sintomas, doencas, historicosFamiliares, dieta, horarios, medicamentos } = req.body;
+        const { 
+            CPF, Telefone, Celular, Nome, Sexo, Email, Altura, Peso, 
+            CircunferenciaAbdominal, HorarioAcordar, Hidratacao, Sono, 
+            Intestino, DataNascimento, alergias, emocionais, esportes, 
+            suplementos, sintomas, doencas, historicosFamiliares, dieta, 
+            horarios, medicamentos, fuma, tipoFumante, vezesPorSemanaFumo, 
+            cigarrosPorDia, bebe, tipoBebida, vezesPorSemanaBebida 
+        } = req.body;
 
-        if (!CPF || !Telefone || !Nome || !Sexo || !Email || !Altura || !Peso || !CircunferenciaAbdominal || !HorarioAcordar || !Hidratacao || !Sono || !Intestino || !DataNascimento) {
+        if (!CPF || !Telefone || !Nome || !Sexo || !Email || !Altura || !Peso || !CircunferenciaAbdominal) {
             return res.status(400).json({ message: "Missing required fields" });
         }
 
         const pacienteData = {
-            CPF,
-            Telefone,
-            Celular,
-            Nome,
-            Sexo,
-            Email,
-            Altura: parseFloat(Altura), // Ensure number conversion
-            Peso: parseFloat(Peso),     // Ensure number conversion
+            CPF, Telefone, Celular, Nome, Sexo, Email,
+            Altura: parseFloat(Altura),
+            Peso: parseFloat(Peso),
             CircunferenciaAbdominal: parseFloat(CircunferenciaAbdominal),
-            HorarioAcordar,
-            Hidratacao,
-            Sono,
-            Intestino,
-            DataNascimento,
-            alergias,
-            emocionais,
-            esportes,
-            suplementos,
-            sintomas,
-            doencas,
-            historicosFamiliares,
-            dieta,
-            horarios,
-            medicamentos
+            HorarioAcordar, Hidratacao, Sono, Intestino, DataNascimento,
+            alergias, emocionais, esportes, suplementos, sintomas, doencas, 
+            historicosFamiliares, dieta, horarios, medicamentos,
+            fuma, tipoFumante, vezesPorSemanaFumo, cigarrosPorDia,
+            bebe, tipoBebida, vezesPorSemanaBebida
         };
 
         const paciente = new Paciente(pacienteData);
@@ -71,7 +62,6 @@ router.get('/pacientes/:id', async (req, res) => {
 });
 
 // PUT: Update a Paciente by ID
-// PUT: Update a Paciente by ID
 router.put('/pacientes/:id', async (req, res) => {
     try {
         const { 
@@ -79,26 +69,27 @@ router.put('/pacientes/:id', async (req, res) => {
             CircunferenciaAbdominal, HorarioAcordar, Hidratacao, Sono, 
             Intestino, DataNascimento, alergias, emocionais, esportes, 
             suplementos, sintomas, doencas, historicosFamiliares, dieta, 
-            horarios, medicamentos 
+            horarios, medicamentos, fuma, tipoFumante, vezesPorSemanaFumo, 
+            cigarrosPorDia, bebe, tipoBebida, vezesPorSemanaBebida 
         } = req.body;
 
-        // Prepare updateData with only provided fields
         const updateData = {};
-        
+
         if (CPF) updateData.CPF = CPF;
         if (Telefone) updateData.Telefone = Telefone;
         if (Celular) updateData.Celular = Celular;
         if (Nome) updateData.Nome = Nome;
         if (Sexo) updateData.Sexo = Sexo;
         if (Email) updateData.Email = Email;
-        if (Altura) updateData.Altura = parseFloat(Altura); // Ensure number conversion
-        if (Peso) updateData.Peso = parseFloat(Peso);     // Ensure number conversion
+        if (Altura) updateData.Altura = parseFloat(Altura);
+        if (Peso) updateData.Peso = parseFloat(Peso);
         if (CircunferenciaAbdominal) updateData.CircunferenciaAbdominal = parseFloat(CircunferenciaAbdominal);
         if (HorarioAcordar) updateData.HorarioAcordar = HorarioAcordar;
         if (Hidratacao) updateData.Hidratacao = Hidratacao;
         if (Sono) updateData.Sono = Sono;
         if (Intestino) updateData.Intestino = Intestino;
         if (DataNascimento) updateData.DataNascimento = DataNascimento;
+
         if (alergias) updateData.alergias = alergias;
         if (emocionais) updateData.emocionais = emocionais;
         if (esportes) updateData.esportes = esportes;
@@ -110,9 +101,21 @@ router.put('/pacientes/:id', async (req, res) => {
         if (horarios) updateData.horarios = horarios;
         if (medicamentos) updateData.medicamentos = medicamentos;
 
-        const updatedPaciente = await Paciente.findByIdAndUpdate(req.params.id, updateData, { new: true })
-            .populate('alergias emocionais sintomas doencas historicosFamiliares.doenca dieta horarios medicamentos');
-        
+        if (typeof fuma === 'boolean') updateData.fuma = fuma;
+        if (tipoFumante) updateData.tipoFumante = tipoFumante;
+        if (vezesPorSemanaFumo) updateData.vezesPorSemanaFumo = vezesPorSemanaFumo;
+        if (cigarrosPorDia) updateData.cigarrosPorDia = cigarrosPorDia;
+
+        if (typeof bebe === 'boolean') updateData.bebe = bebe;
+        if (tipoBebida) updateData.tipoBebida = tipoBebida;
+        if (vezesPorSemanaBebida) updateData.vezesPorSemanaBebida = vezesPorSemanaBebida;
+
+        const updatedPaciente = await Paciente.findByIdAndUpdate(
+            req.params.id,
+            updateData,
+            { new: true }
+        ).populate('alergias emocionais sintomas doencas historicosFamiliares.doenca dieta horarios medicamentos');
+
         if (!updatedPaciente) return res.status(404).json({ message: "Paciente not found" });
         res.status(200).json({ message: "Paciente updated successfully", updatedPaciente });
     } catch (error) {
@@ -120,7 +123,6 @@ router.put('/pacientes/:id', async (req, res) => {
         res.status(500).json({ message: "Error updating paciente", error: error.message });
     }
 });
-
 
 // DELETE: Delete a Paciente by ID
 router.delete('/pacientes/:id', async (req, res) => {

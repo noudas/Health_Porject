@@ -17,7 +17,7 @@ const alergiaSchema = new Schema({
             'Alimentar',
             'Medicamento',
             'Ambiental',
-            'Insectos',
+            'Insetos',
             'Animais',
             'Latex',
             'Fragrâncias',
